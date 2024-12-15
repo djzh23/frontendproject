@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Views.Page.ProfilePage"
+             xmlns:converter="clr-namespace:ppm_fe.Converters"
+             xmlns:vm="clr-namespace:ppm_fe.ViewModels.Pages"
+             xmlns:ctr="clr-namespace:ppm_fe.Controls"  Shell.NavBarIsVisible="{OnPlatform Android=true, WinUI=false}"
+             Title="ProfilePage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:InverseBoolConverter x:Key="InverseBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <!-- Fixed connectivity bar -->
+        <Grid VerticalOptions="Start"
+          ZIndex="1"
+          RowDefinitions="Auto"
+          BackgroundColor="Red" 
+          IsVisible="{Binding IsConnected, Converter={StaticResource InverseBoolConverter}}">
+
+            <Label Text="Keine Internetverbindung" 
+               TextColor="White" 
+               FontSize="14" 
+               FontAttributes="Bold"
+               HorizontalOptions="Center" 
+               VerticalOptions="Center" 
+               Padding="0,5"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1" >
+        <Frame Padding="10"
+               Margin="5"
+               BackgroundColor="{DynamicResource Tertiary}">
+            <Frame.Background>
+                <DynamicResource Key="GradientBrush" />
+            </Frame.Background>
+
+            <Frame.Content>
+                <VerticalStackLayout  Padding="5">
+                    <Label 
+                        Text="Profile Information" 
+                        FontSize="Large" 
+                        TextColor="{DynamicResource PrimaryDarkText}"
+                        FontAttributes="Bold" 
+                        HorizontalOptions="Center" 
+                        Margin="0,20,0,20" />
+
+                    <Grid HeightRequest="60" BackgroundColor="LightGray">
+                        <Label Text="Hier können Sie Ihre persönliche-kontodaten anpassen" 
+                               TextColor="Black"
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center" 
+                               FontAttributes="Italic"/>
+                    </Grid>
+
+                    <ActivityIndicator IsVisible="{Binding  IsRefreshing}" IsRunning="{Binding  IsRefreshing}">
+                        <ActivityIndicator.Style>
+                            <Style TargetType="ActivityIndicator">
+                                <Setter Property="Color" Value="{DynamicResource PrimaryDarkText}" />
+                                <Setter Property="HeightRequest" Value="30" />
+                                <Setter Property="WidthRequest" Value="30" />
+                                <Setter Property="HorizontalOptions" Value="Center" />
+                                <Setter Property="VerticalOptions" Value="Center" />
+                            </Style>
+                        </ActivityIndicator.Style>
+                    </ActivityIndicator>
+
+                    <VerticalStackLayout Padding="5" >
+                        <ctr:LabeledEntry MyLabel="Vorname" Text="{Binding User.Firstname}" Placeholder="Vorname" FontSize="18"  />
+                        <ctr:LabeledEntry MyLabel="Nachname" Text="{Binding User.Lastname}" Placeholder="Nachname" FontSize="18"   />
+                        <ctr:LabeledEntry MyLabel="Telefonnummer" Text="{Binding User.Number}" Placeholder="Telefonnummer" FontSize="18"    />
+                        <ctr:LabeledEntry MyLabel="Email" Text="{Binding User.Email}" Placeholder="Email" FontSize="18"    />
+                        <ctr:LabeledEntry MyLabel="Bankname" Text="{Binding User.bank_name}" Placeholder="Bankname" FontSize="18" />
+                        <ctr:LabeledEntry MyLabel="Steueridentifikationsnummer" Text="{Binding User.Steueridentifikationsnummer}" Placeholder="Enter steueridentifikationsnummer" FontSize="18"/>
+                        <ctr:LabeledEntry MyLabel="IBAN" Text="{Binding User.Iban}" Placeholder="IBAN" FontSize="18"/>
+                        <ctr:LabeledEntry MyLabel="BIC" Text="{Binding User.Bic}" Placeholder="BIC" FontSize="18"/>
+                        <ctr:LabeledEntry MyLabel="Stadt" Text="{Binding User.City}" Placeholder="Stadt" FontSize="18"/>
+                        <ctr:LabeledEntry MyLabel="Straße" Text="{Binding User.Street}" Placeholder="Starße" FontSize="18"/>
+                        <ctr:LabeledEntry MyLabel="Land" Text="{Binding User.Country}" Placeholder="" FontSize="18"/>
+                        <ctr:LabeledEntry MyLabel="Postleitzahl" Text="{Binding User.Pzl}" Placeholder="Postleitzahl" FontSize="18"/>
+                    </VerticalStackLayout>
+
+                    <HorizontalStackLayout HorizontalOptions="Center">
+                        <ctr:CustomButton 
+                                ButtonText="Profil aktualisieren"
+                                EnabledColor="{DynamicResource PrimaryButtonBackgroundColor}"
+                                DisabledColor="{DynamicResource CancelButtonBackgroundColor}"
+                                ButtonCommand="{Binding UpdateCommand}"
+                                IsEnabled="{Binding  IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                                HorizontalOptions="Center"
+                                Margin="0,20,0,20" />
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
+            </Frame.Content>
+        </Frame>
+    </ScrollView>
+    </Grid>
+</ContentPage>

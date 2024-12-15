@@ -1,5 +1,6 @@
 ﻿using ppm_fe.Controls;
 using ppm_fe.Views.Dashboards;
+using ppm_fe.Views.Page;
 
 namespace ppm_fe.Models
 {
@@ -38,7 +39,35 @@ namespace ppm_fe.Models
                                     Style = Application.Current?.Resources != null
                                             ? (Style)Application.Current.Resources["ShellContentStyle"]
                                             : null,
-                                }
+                                },
+                                new ShellContent
+                                {
+                                    Icon = Icons.Users,
+                                    Title = "All Users Page",
+                                    ContentTemplate = new DataTemplate(typeof(AllUsersPage)),
+                                    Style = Application.Current?.Resources != null
+                                            ? (Style)Application.Current.Resources["ShellContentStyle"]
+                                            : null,
+                                },
+                                new ShellContent
+                                {
+                                    Icon = Icons.CreateBilling,
+                                    Title = "Rechnungen",
+                                    ContentTemplate = new DataTemplate(typeof(BillingPage)),
+                                },
+                                new ShellContent
+                                {
+                                    Icon = Icons.ProfilRed,
+                                    Title = "Profile",
+                                    ContentTemplate = new DataTemplate(typeof(ProfilePage)),
+                                },
+                                new ShellContent
+                                {
+                                    Icon = Icons.AboutUs,
+                                    Title = "Einstellung",
+                                    ContentTemplate = new DataTemplate(typeof(SettingPage)),
+                                    Style = Application.Current ?.Resources != null ?(Style) Application.Current.Resources["ShellContentStyle"] : null,
+                                },
                             }
                 };
                 if (!Shell.Current.Items.Contains(flyoutItem))
