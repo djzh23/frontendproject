@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Views.Startup.RegisterPage"
+             xmlns:ctr="clr-namespace:ppm_fe.Controls"
+             xmlns:converter="clr-namespace:ppm_fe.Converters"
+             Title="RegisterPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:InverseBoolConverter x:Key="InverseBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+
+    <Grid Padding="0">
+        <!-- Background Image -->
+        <Image Source="kids.jpg"
+               Aspect="AspectFill"
+               Opacity="0.8"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="FillAndExpand"
+               Grid.RowSpan="2" />
+
+        <!-- ScrollView for form fields -->
+        <ScrollView>
+            <Border Padding="0" 
+                       Margin="10"
+                      StrokeShape="RoundRectangle 10,10,10,10">
+                <Border.Background>
+                    <DynamicResource Key="GradientBrush" />
+                </Border.Background>
+
+                <Border.Content>
+
+                    <StackLayout Spacing="5" Padding="0">
+
+                        <HorizontalStackLayout Spacing="10" Margin="30,30,30,10" >
+                            <Image Source="formular_icon.png"
+                                   HeightRequest="32"
+                                   WidthRequest="32"
+                                   VerticalOptions="Center"/>
+                            <Label Text="Persönliche Eingaben"
+                                 TextColor="{DynamicResource PrimaryDarkText}"
+                                 FontSize="Title"
+                                 VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        
+                        <!-- First Name Entry -->
+                        <ctr:LabeledEntry  MyLabel="Vorname" Text="{Binding Firstname}"
+                                           FontSizeLabel="14"
+                                           Placeholder="Vorname"
+                                           Keyboard="Text"
+                                           HorizontalOptions="FillAndExpand"/>
+
+                        <!-- Last Name Entry -->
+                        <ctr:LabeledEntry  MyLabel="Nachname" Text="{Binding Lastname}"
+                               FontSizeLabel="14"
+                               Placeholder="Nachname"
+                               Keyboard="Text"
+                               HorizontalOptions="FillAndExpand"/>
+
+                        <!-- Street Entry -->
+                        <ctr:LabeledEntry  MyLabel="Straße" Text="{Binding Street}"
+                               FontSizeLabel="14"
+                               Placeholder="Straße"
+                               Keyboard="Text"
+                               HorizontalOptions="FillAndExpand"/>
+
+                        <!-- City and PLZ Entry -->
+                        <ctr:LabeledEntry  MyLabel="Stadt" Text="{Binding City}"
+                               FontSizeLabel="14"
+                               Placeholder="Stadt	"
+                               Keyboard="Text"
+                               HorizontalOptions="FillAndExpand"/>
+
+                        <ctr:LabeledEntry  MyLabel="Postleitzahl" Text="{Binding Plz}"
+                               FontSizeLabel="14"
+                               Placeholder="Postleitzahl	"
+                               Keyboard="Text"
+                               HorizontalOptions="FillAndExpand"/>
+
+                        <!-- Land Entry -->
+                        <ctr:LabeledEntry  MyLabel="Land" Text="{Binding Country}"
+                               FontSizeLabel="14"
+                               Placeholder="Land"
+                               Keyboard="Text"
+                               HorizontalOptions="FillAndExpand"/>
+
+                        <!-- Telefonnummer Entry -->
+                        <ctr:LabeledEntry  MyLabel="Rufnummer" Text="{Binding Number}"
+                               FontSizeLabel="14"
+                               Placeholder="+49 177 .."
+                               Keyboard="Text"
+                               HorizontalOptions="FillAndExpand"/>
+
+
+                        <HorizontalStackLayout Spacing="10" Margin="30,30,30,10">
+                            <Image Source="formular_icon.png"
+                                   HeightRequest="32"
+                                   WidthRequest="32"
+                                   VerticalOptions="Center"/>
+
+                            <Label Text="Steuer und Bank Eingaben"
+                                   TextColor="{DynamicResource PrimaryDarkText}"
+                                   FontSize="Title"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Steueridentifikationnummer Entry -->
+                        <ctr:LabeledEntry  MyLabel="Steueridentifikationnummer" Text="{Binding Steueridentifikationnummer}"
+                               FontSizeLabel="14"
+                               Placeholder="Steueridentifikationnummer"
+                               Keyboard="Numeric"
+                               HorizontalOptions="FillAndExpand"/>
+
+                        <!-- Bank Name Entry -->
+                        <ctr:LabeledEntry  MyLabel="Bankname" Text="{Binding Bankname}"
+                               FontSizeLabel="14"
+                               Placeholder="Bankname"
+                               Keyboard="Text"
+                               HorizontalOptions="FillAndExpand"/>
+
+                        <!-- IBAN and BIC Entry -->
+                        <ctr:LabeledEntry  MyLabel="IBAN" Text="{Binding Iban}"
+                               FontSizeLabel="14"
+                               Placeholder="IBAN"
+                               Keyboard="Text"
+                               HorizontalOptions="FillAndExpand"/>
+
+                        <!-- BIC Entry -->
+                        <ctr:LabeledEntry  MyLabel="BIC" Text="{Binding Bic}"
+                               FontSizeLabel="14"
+                               Placeholder="BIC"
+                               Keyboard="Text"
+                               HorizontalOptions="FillAndExpand"/>
+
+                        
+                        <HorizontalStackLayout Spacing="10" Margin="30,30,30,10">
+                            <Image Source="formular_icon.png"
+                                   HeightRequest="32"
+                                   WidthRequest="32"
+                                   VerticalOptions="Center"/>
+                            
+                            <Label Text="Konto Eingabe"
+                                   TextColor="{DynamicResource PrimaryDarkText}"
+                                   FontSize="Title"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Email Entry -->
+                        <ctr:LabeledEntry  MyLabel="Email" Text="{Binding Email}"
+                               FontSizeLabel="14"
+                               Placeholder="Email"
+                               Keyboard="Email"
+                               HorizontalOptions="FillAndExpand"/>
+
+                        <!-- Password Entry -->
+                        <ctr:LabeledEntry  MyLabel="Kennwort" Text="{Binding Password}"
+                               FontSizeLabel="14"
+                               Placeholder="Kennwort"
+                               IsPassword="True"
+                               HorizontalOptions="FillAndExpand"/>
+
+                        <!-- Repeat Password Entry -->
+                        <ctr:LabeledEntry  MyLabel="Kennwort wiederholen" Text="{Binding Passwordrepeat}"
+                               FontSizeLabel="14"
+                               Placeholder="Kennwort wiederholen"
+                               IsPassword="True"
+                               HorizontalOptions="FillAndExpand"/>
+
+                        <ctr:CustomButton 
+                            ButtonText="Registrierung senden"
+                            EnabledColor="{DynamicResource PrimaryButtonBackgroundColor}"
+                            DisabledColor="{DynamicResource CancelButtonBackgroundColor}"
+                            ButtonCommand="{Binding RegisterCommand}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                            HorizontalOptions="Center"
+                            Margin="0,20,0,10" />
+
+                        <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+
+                        <Button 
+                            Text="Zurück zu Login" 
+                            Margin="0,0,0,30" 
+                            HorizontalOptions="Center" 
+                            BackgroundColor="{DynamicResource CancelButtonBackgroundColor}"
+                            TextColor="{DynamicResource  CancelButtonTextColor}"
+                            CornerRadius="20"  
+                            Clicked="OnBackButtonClick" />
+                    </StackLayout>
+                </Border.Content>
+            </Border>
+        </ScrollView>
+    </Grid>
+</ContentPage>

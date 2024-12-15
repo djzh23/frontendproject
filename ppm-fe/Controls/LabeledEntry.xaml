@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Controls.LabeledEntry" 
+             x:Name="this">
+
+    <Border Padding="10" Margin="5" StrokeShape="RoundRectangle 10,10,10,10"  >
+        <Border.Background>
+            <DynamicResource Key="LabeledEntryBackgroundColor" />
+        </Border.Background>
+        
+        <Border.Content>
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="35*" />
+                    <ColumnDefinition Width="65*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" 
+                       Text="{Binding MyLabel, Source={x:Reference this}}" 
+                       TextColor="{DynamicResource LabeledEntryTextColor}" 
+                       FontSize="{Binding FontSizeLabel, Source={x:Reference this}}"
+                       VerticalOptions="Center" />
+
+                <Entry Grid.Column="1" 
+                       Text="{Binding Text, Mode=TwoWay, Source={x:Reference this}}" 
+                       Placeholder="{Binding Placeholder, Source={x:Reference this}}" 
+                       Keyboard="{Binding Keyboard, Source={x:Reference this}}"
+                       PlaceholderColor="{DynamicResource LabeledEntryPlaceholderColor}" 
+                       FontSize="{Binding FontSize, Source={x:Reference this}}"
+                       BackgroundColor="{DynamicResource Tertiary}"
+                       TextColor="{DynamicResource PrimaryDarkText}"
+                       VerticalOptions="Center" 
+                       IsPassword="{Binding IsPassword, Source={x:Reference this}}"/>
+            </Grid>
+        </Border.Content>
+    </Border>
+</ContentView>

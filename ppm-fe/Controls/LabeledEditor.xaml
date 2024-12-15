@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Controls.LabeledEditor"
+             x:Name="root">
+
+    <Border Padding="15" Margin="5" StrokeShape="RoundRectangle 10,10,10,10">
+        <Border.Background>
+            <DynamicResource Key="LabeledEntryBackgroundColor" />
+        </Border.Background>
+
+        <Border.Content>
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <VerticalStackLayout>
+                    <Label Grid.Column="0" 
+                           Text="{Binding MyLabel, Source={x:Reference root}}" 
+                           TextColor="{DynamicResource LabeledEntryTextColor}" 
+                           FontSize="16" 
+                           VerticalOptions="Center" />
+
+                    <Editor Grid.Column="1" 
+                            HeightRequest="200"
+                            Text="{Binding Text, Mode=TwoWay, Source={x:Reference root}}" 
+                            Placeholder="{Binding Placeholder, Source={x:Reference root}}" 
+                            FontAttributes="Bold"
+                            CharacterSpacing="1"
+                            PlaceholderColor="{DynamicResource LabeledEntryPlaceholderColor}" 
+                            BackgroundColor="{DynamicResource Tertiary}"
+                            TextColor="{DynamicResource LabeledEntryTextColor}"
+                            VerticalOptions="Center" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border.Content>
+    </Border>
+</ContentView>

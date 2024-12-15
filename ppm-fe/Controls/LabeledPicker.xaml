@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Controls.LabeledPicker"
+             x:Name="this">
+
+    <Border Padding="10" Margin="5" StrokeShape="RoundRectangle 10,10,10,10" >
+        <Border.Background>
+            <DynamicResource Key="LabeledEntryBackgroundColor" />
+        </Border.Background>
+        
+        <Border.Content>
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="35*" />
+                    <ColumnDefinition Width="65*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" 
+                       Text="{Binding MyLabel, Source={x:Reference this}}" 
+                       TextColor="{DynamicResource LabeledEntryTextColor}" 
+                       VerticalOptions="Center" />
+
+                <!--Title="click hier um die liste von Teams zu wählen"-->
+                <Picker Grid.Column="1" 
+                        TitleColor="Gray"
+                        ItemsSource="{Binding ItemsSource, Source={x:Reference this}}"
+                        SelectedItem="{Binding SelectedItem, Mode=TwoWay, Source={x:Reference this}}" 
+                        FontSize="{Binding FontSize, Source={x:Reference this}}"
+                        BackgroundColor="{DynamicResource Tertiary}"
+                        TextColor="{DynamicResource PrimaryDarkText}"
+                        VerticalOptions="Center" />
+            </Grid>
+        </Border.Content>
+    </Border>
+</ContentView>

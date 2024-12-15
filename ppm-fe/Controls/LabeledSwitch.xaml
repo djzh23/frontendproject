@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Controls.LabeledSwitch"
+             WidthRequest="150"
+             x:Name="this">
+
+    <Border Padding="10" Margin="5" StrokeShape="RoundRectangle 10,10,10,10">
+        <Border.Background>
+            <DynamicResource Key="LabeledEntryBackgroundColor" />
+        </Border.Background>
+        
+        <Border.Content>
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50*" />
+                    <ColumnDefinition Width="50*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" 
+                       Text="{Binding MyLabel, Source={x:Reference this}}" 
+                       TextColor="{DynamicResource LabeledEntryTextColor}" 
+                       BackgroundColor="{DynamicResource LabeledEntryBackgroundColor}" 
+                       HorizontalOptions="StartAndExpand"
+                       VerticalOptions="Center" />
+
+                <Switch Grid.Column="1"
+                        HorizontalOptions="EndAndExpand"
+                        Margin="0,0,0,0"
+                        OnColor="{DynamicResource Tertiary}"
+                        ThumbColor="{DynamicResource CancelButtonBackgroundColor}"
+                        IsToggled="{Binding IsToggled, Mode=TwoWay, Source={x:Reference this}}" 
+                        VerticalOptions="Center" />
+            </Grid>
+        </Border.Content>
+    </Border>
+</ContentView>
