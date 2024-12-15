@@ -1,0 +1,64 @@
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.sln.docstates
+
+# Visual Studio files
+.vs/
+*.vscode/
+*.csproj.user
+*.csproj.lock
+
+# Rider files
+.idea/
+
+# User-specific files
+*.userprefs
+
+# MacOS files
+.DS_Store
+
+# Android files
+*.apk
+*.ap_
+*.dex
+*.class
+*.so
+*.jar
+*.keystore
+*.jks
+*.gradle/
+local.properties
+
+# iOS files
+*.ipa
+*.app
+*.dSYM/
+*.xcuserdata/
+*.xcworkspace/
+
+# Other files
+*.log
+*.tmp
+*.tmp.*
+*.swp
+*.swo
+*.bak
+*.orig
+*.pid
+*.seed
+*.pdb
+*.mdb
+*.dbmdl
+*.dbproj.schemaview
+*.dbproj.user
+*.dbproj
+
+# NuGet packages
+*.nupkg
+*.snupkg
+packages/
