@@ -1,0 +1,78 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Admin\\Desktop\\maui-fe\\ppm-fe\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FE31F993-890E-419B-8E75-58D0BFF47B58}|ppm-fe\\ppm-fe.csproj|c:\\users\\admin\\desktop\\maui-fe\\ppm-fe\\ppm-fe\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FE31F993-890E-419B-8E75-58D0BFF47B58}|ppm-fe\\ppm-fe.csproj|solutionrelative:ppm-fe\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FE31F993-890E-419B-8E75-58D0BFF47B58}|ppm-fe\\ppm-fe.csproj|c:\\users\\admin\\desktop\\maui-fe\\ppm-fe\\ppm-fe\\ppm-fe.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{FE31F993-890E-419B-8E75-58D0BFF47B58}|ppm-fe\\ppm-fe.csproj|solutionrelative:ppm-fe\\ppm-fe.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Admin\\.nuget\\packages\\communitytoolkit.maui\\9.0.3\\ReadMe.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 3189,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ReadMe.txt",
+              "DocumentMoniker": "C:\\Users\\Admin\\.nuget\\packages\\communitytoolkit.maui\\9.0.3\\ReadMe.txt",
+              "RelativeDocumentMoniker": "..\\..\\..\\.nuget\\packages\\communitytoolkit.maui\\9.0.3\\ReadMe.txt",
+              "ToolTip": "C:\\Users\\Admin\\.nuget\\packages\\communitytoolkit.maui\\9.0.3\\ReadMe.txt",
+              "RelativeToolTip": "..\\..\\..\\.nuget\\packages\\communitytoolkit.maui\\9.0.3\\ReadMe.txt",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-12-15T12:21:23.963Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MauiProgram.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\maui-fe\\ppm-fe\\ppm-fe\\MauiProgram.cs",
+              "RelativeDocumentMoniker": "ppm-fe\\MauiProgram.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\maui-fe\\ppm-fe\\ppm-fe\\MauiProgram.cs",
+              "RelativeToolTip": "ppm-fe\\MauiProgram.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-15T11:23:02.068Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ppm-fe",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\maui-fe\\ppm-fe\\ppm-fe\\ppm-fe.csproj",
+              "RelativeDocumentMoniker": "ppm-fe\\ppm-fe.csproj",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\maui-fe\\ppm-fe\\ppm-fe\\ppm-fe.csproj",
+              "RelativeToolTip": "ppm-fe\\ppm-fe.csproj",
+              "ViewState": "AQIAADMAAAAAAAAAAAAAAEIAAABCAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-12-15T11:21:01.575Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
