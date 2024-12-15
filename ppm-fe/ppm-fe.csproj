@@ -57,6 +57,60 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\about_us.png" />
+	  <None Remove="Resources\Images\adress_icon.png" />
+	  <None Remove="Resources\Images\arrow_down_icon.png" />
+	  <None Remove="Resources\Images\bank_icon.png" />
+	  <None Remove="Resources\Images\bic_icon.png" />
+	  <None Remove="Resources\Images\check_circle_32.png" />
+	  <None Remove="Resources\Images\cheque_32.png" />
+	  <None Remove="Resources\Images\city_icon.png" />
+	  <None Remove="Resources\Images\close_circle_32.png" />
+	  <None Remove="Resources\Images\cloud_32.png" />
+	  <None Remove="Resources\Images\company_logo.jpg" />
+	  <None Remove="Resources\Images\contact_us.png" />
+	  <None Remove="Resources\Images\country_icon.png" />
+	  <None Remove="Resources\Images\cursor_32.png" />
+	  <None Remove="Resources\Images\dashboard.png" />
+	  <None Remove="Resources\Images\default_avatar.png" />
+	  <None Remove="Resources\Images\delete_icon.png" />
+	  <None Remove="Resources\Images\edit_name_icon.png" />
+	  <None Remove="Resources\Images\email_icon_1.png" />
+	  <None Remove="Resources\Images\forgot_password_icon.png" />
+	  <None Remove="Resources\Images\formular_icon.png" />
+	  <None Remove="Resources\Images\game_icon.png" />
+	  <None Remove="Resources\Images\gradient_background.jpg" />
+	  <None Remove="Resources\Images\hamburger_menu_icon.png" />
+	  <None Remove="Resources\Images\home_icon.png" />
+	  <None Remove="Resources\Images\icon_email.png" />
+	  <None Remove="Resources\Images\kids.jpg" />
+	  <None Remove="Resources\Images\left_arrow_icon.png" />
+	  <None Remove="Resources\Images\lock.png" />
+	  <None Remove="Resources\Images\lock_bold.png" />
+	  <None Remove="Resources\Images\logotransparent.png" />
+	  <None Remove="Resources\Images\more_icon.png" />
+	  <None Remove="Resources\Images\note_icon.png" />
+	  <None Remove="Resources\Images\number_icon.png" />
+	  <None Remove="Resources\Images\password_icon.png" />
+	  <None Remove="Resources\Images\phone_icon.png" />
+	  <None Remove="Resources\Images\plusminusicon_32.png" />
+	  <None Remove="Resources\Images\plz_icon.png" />
+	  <None Remove="Resources\Images\profile_black_icon.png" />
+	  <None Remove="Resources\Images\profile_gold_icon.png" />
+	  <None Remove="Resources\Images\profile_icon.png" />
+	  <None Remove="Resources\Images\profile_red_icon.png" />
+	  <None Remove="Resources\Images\right_arrow_icon.png" />
+	  <None Remove="Resources\Images\roles_icon.png" />
+	  <None Remove="Resources\Images\statistic_icon.png" />
+	  <None Remove="Resources\Images\superadminhome.png" />
+	  <None Remove="Resources\Images\team.png" />
+	  <None Remove="Resources\Images\typeicon_32.png" />
+	  <None Remove="Resources\Images\user.png" />
+	  <None Remove="Resources\Images\users_icon.png" />
+	  <None Remove="Resources\Images\world_icon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.3" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="itext7" Version="8.0.5" />
@@ -69,6 +123,24 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="2.0.0" />
 		<PackageReference Include="UraniumUI.Material" Version="2.9.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Models\" />
+	  <Folder Include="Helpers\" />
+	  <Folder Include="Controls\" />
+	  <Folder Include="Converters\" />
+	  <Folder Include="Constants\" />
+	  <Folder Include="Behaviors\" />
+	  <Folder Include="Extensions\" />
+	  <Folder Include="Resources\Themes\" />
+	  <Folder Include="Services\Interfaces\" />
+	  <Folder Include="ViewModels\Dashboards\" />
+	  <Folder Include="ViewModels\Startup\" />
+	  <Folder Include="ViewModels\Pages\" />
+	  <Folder Include="Views\Dashboards\" />
+	  <Folder Include="Views\Startup\" />
+	  <Folder Include="Views\Pages\" />
 	</ItemGroup>
 
 </Project>
