@@ -52,7 +52,7 @@ namespace ppm_fe.ViewModels.Startup
                 App.UserDetails = userInfo;
 
                 // Add flyout menu details
-                //await AppNavigation.AddFlyoutMenusDetails();
+                await AppNavigation.AddFlyoutMenusDetails();
             }
             catch (Exception ex)
             {

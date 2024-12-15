@@ -11,7 +11,7 @@
                 2 => "Vereinsgründer",
                 3 => "Festmitarbeiter",
                 4 => "Honorarkraft",
-                _ => "Unknown"
+                _ => "Unbekannt"
             };
         }
 
@@ -23,7 +23,7 @@
                 "Vereinsgründer" => 2,
                 "Festmitarbeiter" => 3,
                 "Honorarkraft" => 4,
-                "Unknown" => 5,
+                "Unbekannt" => 5,
                 _ => 5
             };
         }

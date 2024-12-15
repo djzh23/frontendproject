@@ -19,7 +19,8 @@ namespace ppm_fe.ViewModels
         {
             _authService = authService ?? throw new ArgumentNullException(nameof(authService));
             SignOutCommand = new AsyncRelayCommand(SignOutAsync);
-            //SignOutCommand.Execute(null); for testing - logout manualy
+            // for testing - logout manualy
+            //SignOutCommand.Execute(null);
         }
 
         private async Task SignOutAsync()
