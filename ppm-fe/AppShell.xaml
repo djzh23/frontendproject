@@ -4,12 +4,70 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:ppm_fe"
-    Shell.FlyoutBehavior="Disabled"
+    xmlns:dashboardPages="clr-namespace:ppm_fe.Views.Dashboards"
+    xmlns:models="clr-namespace:ppm_fe.Models"
+    Shell.TabBarIsVisible="False"
+    xmlns:startupPages="clr-namespace:ppm_fe.Views.Startup"
+    FlyoutBackground="{DynamicResource GradientBrush}"
+    Shell.FlyoutBehavior="Flyout"
+    FlyoutBackdrop="Gray"
+    FlyoutIcon="hamburger_menu_icon.png"
+    Shell.ForegroundColor="{DynamicResource Tertiary}"
+    Shell.TitleColor="{DynamicResource PrimaryDarkText}"
     Title="ppm_fe">
 
+
+    <Shell.ItemTemplate >
+        <DataTemplate>
+            <HorizontalStackLayout Padding="8" Spacing="12">
+                <Border StrokeShape="RoundRectangle 10,10,10,10"
+                        Padding="8" 
+                        BackgroundColor="{DynamicResource White}"
+                        VerticalOptions="Center">
+                    <Image Source="{Binding Icon}" 
+                           WidthRequest="24" 
+                           HeightRequest="24" 
+                           Aspect="AspectFit" />
+                </Border>
+
+                <Label Text="{Binding Title}" 
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="{DynamicResource PrimaryDarkText}"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <ShellContent FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled"
+        ContentTemplate="{DataTemplate startupPages:LoadingPage}" Route="LoadingPage"  />
+
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Login Page" FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled"
+        ContentTemplate="{DataTemplate startupPages:LoginPage}"
+        Route="LoginPage" />
+
+    <ShellContent
+        Title="Register Page" FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled"
+        ContentTemplate="{DataTemplate startupPages:RegisterPage}"
+        Route="RegisterPage" />
+
+
+    <Shell.FlyoutFooter>
+        <StackLayout Padding="20" HeightRequest="150">
+            <Button  BackgroundColor="{DynamicResource ButtonBackgroundColor }"
+                     TextColor="{DynamicResource ButtonTextColor}"
+                     Text="Sign Out"
+                     Command="{Binding SignOutCommand}" />
+
+            <Image Source="logo.png" HeightRequest="0" WidthRequest="100" HorizontalOptions="Center" />
+            <Label Text="PPM Für Verein" TextColor="{DynamicResource TextColor}" HorizontalOptions="Center" />
+            <Label Text="Version 1.0"  TextColor="{DynamicResource TextColor}" HorizontalOptions="Center" />
+            <Label Text="© 2024" TextColor="{DynamicResource TextColor}" HorizontalOptions="Center" />
+            <Label Text="Powered by - LePrasson" TextColor="{DynamicResource TextColor}" HorizontalOptions="Center" />
+            <Image Source="logo.png" HeightRequest="100" WidthRequest="100" HorizontalOptions="Center" />
+
+        </StackLayout>
+    </Shell.FlyoutFooter>
 
 </Shell>

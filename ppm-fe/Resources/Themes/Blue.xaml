@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Resources.Themes.Blue">
+
+
+    <!-- Enhanced Blue Theme Colors -->
+    <Color x:Key="Primary">#1976D2</Color>
+    <Color x:Key="PrimaryDark">#0D47A1</Color>
+    <Color x:Key="PrimaryDarkText">#E6F3FF</Color>
+    <Color x:Key="Secondary">#03A9F4</Color>
+    <Color x:Key="SecondaryDarkText">#E1F5FE</Color>
+    <Color x:Key="Tertiary">#4FC3F7</Color>
+
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
+
+    <LinearGradientBrush x:Key="FlyoutBackgroundBlue" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#E3F2FD" Offset="0.0" />
+        <GradientStop Color="#BBDEFB" Offset="0.3" />
+        <GradientStop Color="#90CAF9" Offset="0.7" />
+        <GradientStop Color="#64B5F6" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#00008B" Offset="0.0" />
+        <!-- DarkBlue -->
+        <GradientStop Color="#0000CD" Offset="0.3" />
+        <!-- MediumBlue -->
+        <GradientStop Color="#1E90FF" Offset="0.7" />
+        <!-- DodgerBlue -->
+        <GradientStop Color="#87CEEB" Offset="1.0" />
+        <!-- SkyBlue -->
+    </LinearGradientBrush>
+
+    <!-- Primary Button -->
+    <Color x:Key="PrimaryButtonBackgroundColor">#DC143C</Color>
+    <Color x:Key="PrimaryButtonTextColor">#FFFFFF</Color>
+
+    <!-- Secondary Button -->
+    <Color x:Key="SecondaryButtonBackgroundColor">#FFA500</Color>
+    <Color x:Key="SecondaryButtonTextColor">#FFFFFF</Color>
+
+    <!-- Cancel Button -->
+    <Color x:Key="CancelButtonBackgroundColor">#808080</Color>
+    <Color x:Key="CancelButtonTextColor">#FFFFFF</Color>
+
+    <!-- Other UI Elements -->
+    <Color x:Key="FrameOne">#007BFF</Color>
+    <Color x:Key="FrameTwo">#F0F0F0</Color>
+    <Color x:Key="FrameThree">#BBDEFB</Color>
+    <Color x:Key="LabeledEntryBackgroundColor">#E6F3FF</Color>
+    <Color x:Key="LabeledEntryTextColor">#000000</Color>
+    <Color x:Key="LabeledEntryPlaceholderColor">#666666</Color>
+
+</ResourceDictionary>

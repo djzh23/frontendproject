@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Resources.Themes.Default">
+
+    <!-- Enhanced Default Theme Colors -->
+    <Color x:Key="Primary">#6200EE</Color>
+    <Color x:Key="PrimaryDark">#3700B3</Color>
+    <Color x:Key="PrimaryDarkText">black</Color>
+    <Color x:Key="Secondary">#03DAC6</Color>
+    <Color x:Key="SecondaryDarkText">#018786</Color>
+    <Color x:Key="Tertiary">#D7C3E0</Color>
+
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
+
+    <LinearGradientBrush x:Key="FlyoutBackgroundDefault" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F5F5F5" Offset="0.0" />
+        <GradientStop Color="#E0E0E0" Offset="0.3" />
+        <GradientStop Color="#CCCCCC" Offset="0.7" />
+        <GradientStop Color="#BDBDBD" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#EAB8E4" Offset="0.0" />
+        <!-- Light Pinkish Purple -->
+        <GradientStop Color="#D6A4E0" Offset="0.3" />
+        <!-- Soft Lavender Purple -->
+        <GradientStop Color="#C68CD4" Offset="0.7" />
+        <!-- Muted Purple -->
+        <GradientStop Color="#A76DB1" Offset="1.0" />
+        <!-- Soft Amethyst -->
+    </LinearGradientBrush>
+
+    <!-- Primary Button -->
+    <Color x:Key="PrimaryButtonBackgroundColor">#512BD4</Color>
+    <Color x:Key="PrimaryButtonTextColor">#FFFFFF</Color>
+
+    <!-- Secondary Button -->
+    <Color x:Key="SecondaryButtonBackgroundColor">#28A745</Color>
+    <Color x:Key="SecondaryButtonTextColor">#FFFFFF</Color>
+
+    <!-- Cancel Button -->
+    <Color x:Key="CancelButtonBackgroundColor">#6C757D</Color>
+    <Color x:Key="CancelButtonTextColor">#FFFFFF</Color>
+
+    <Color x:Key="FrameOne">#BA55D3</Color>
+    <Color x:Key="FrameTwo">#F0F0F0</Color>
+    <Color x:Key="FrameThree">#424242</Color>
+
+    <Color x:Key="LabeledEntryBackgroundColor">#F5F5F5</Color>
+    <Color x:Key="LabeledEntryTextColor">#000000</Color>
+    <Color x:Key="LabeledEntryPlaceholderColor">#666666</Color>
+
+
+
+
+</ResourceDictionary>

@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Resources.Themes.Dark">
+
+    <Color x:Key="Primary">#2C2C2C</Color>
+    <Color x:Key="PrimaryDark">#1A1A1A</Color>
+    <Color x:Key="PrimaryDarkText">#E6F3FF</Color>
+    <Color x:Key="Secondary">#4A6FA5</Color>
+    <Color x:Key="SecondaryDarkText">#B0C4DE</Color>
+    <Color x:Key="Tertiary">#9C4668</Color>
+
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
+
+
+    <LinearGradientBrush x:Key="FlyoutBackgroundDark" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#212121" Offset="0.0" />
+        <GradientStop Color="#303030" Offset="0.3" />
+        <GradientStop Color="#424242" Offset="0.7" />
+        <GradientStop Color="#616161" Offset="1.0" />
+    </LinearGradientBrush>
+
+
+<LinearGradientBrush x:Key="GradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#000000" Offset="0.0" />
+        <!-- Black -->
+        <GradientStop Color="#1A1A1A" Offset="0.3" />
+        <!-- Very Dark Gray -->
+        <GradientStop Color="#333333" Offset="0.7" />
+        <!-- Dark Gray -->
+        <GradientStop Color="#4D4D4D" Offset="1.0" />
+        <!-- Medium Gray -->
+    </LinearGradientBrush>
+
+    <!-- Primary Button -->
+    <Color x:Key="PrimaryButtonBackgroundColor">#DC143C</Color>
+    <Color x:Key="PrimaryButtonTextColor">#FFFFFF</Color>
+
+    <!-- Secondary Button -->
+    <Color x:Key="SecondaryButtonBackgroundColor">#2ECC71</Color>
+    <Color x:Key="SecondaryButtonTextColor">#FFFFFF</Color>
+
+    <!-- Cancel Button -->
+    <Color x:Key="CancelButtonBackgroundColor">#95A5A6</Color>
+    <Color x:Key="CancelButtonTextColor">#FFFFFF</Color>
+
+    <Color x:Key="FrameOne">#4D4D4D</Color>
+    <Color x:Key="FrameTwo">#F0F0F0</Color>
+    <Color x:Key="FrameThree">#424242</Color>
+
+    <Color x:Key="LabeledEntryBackgroundColor">#2C2C2C</Color>
+    <Color x:Key="LabeledEntryTextColor">#FFFFFF</Color>
+    <Color x:Key="LabeledEntryPlaceholderColor">#A0A0A0</Color>
+</ResourceDictionary>

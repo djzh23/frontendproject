@@ -2,12 +2,40 @@
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ppm_fe"
+             xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
              x:Class="ppm_fe.App">
+    
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
-                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+
+                <ResourceDictionary x:Name="appColors" Source="Resources/Themes/Default.xaml" />
+
+                <ResourceDictionary x:Name="appStyles" Source="Resources/Styles/Styles.xaml" />
+
+                <ResourceDictionary>
+
+                    <ResourceDictionary.MergedDictionaries>
+                        <material:StyleResource ColorsOverride="{x:Reference appColors}" BasedOn="{x:Reference appStyles}" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <Style x:Key="ShellContentStyle" TargetType="ShellContent">
+                        <Setter Property="Title" Value="{Binding Title}" />
+                        <Setter Property="Icon" Value="{Binding Icon}" />
+                        <Setter Property="ContentTemplate" Value="{Binding ContentTemplate}" />
+                    </Style>
+
+                    <Style x:Key="FlyoutMenuStyle" TargetType="Label">
+                        <Setter Property="FontSize" Value="Default" />
+                        <Setter Property="TextColor" Value="Gray" />
+                        <Setter Property="FontAttributes" Value="Italic" />
+                        <Setter Property="Margin" Value="15,0,15,0" />
+                        <Setter Property="HorizontalOptions" Value="Start" />
+                    </Style>
+
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

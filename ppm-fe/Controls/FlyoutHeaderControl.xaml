@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<StackLayout xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Controls.FlyoutHeaderControl"
+             xmlns:converter="clr-namespace:ppm_fe.Converters">
+
+    <StackLayout.Resources>
+        <ResourceDictionary>
+            <converter:EmailMaskConverter x:Key="EmailMaskConverter"/>
+        </ResourceDictionary>
+    </StackLayout.Resources>
+    
+    <Border BackgroundColor="{DynamicResource PrimaryDashboardColor}"
+            Stroke="Black"  
+            Margin="10"
+            StrokeShape="RoundRectangle 10,30,10,10"
+            HeightRequest="150"
+            Padding="0">
+            <Grid>
+                <!-- Background Pattern -->
+                <Grid>
+                    <Grid.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="{DynamicResource Secondary}" Offset="0.0"/>
+                            <!-- Deep Blue -->
+                            <GradientStop Color="#2E99FC" Offset="0.25"/>
+                            <!-- Deep Purple -->
+                            <GradientStop Color="{DynamicResource Secondary}" Offset="0.5"/>
+                            <!-- Deep Red -->
+                            <GradientStop Color="#000000" Offset="0.75"/>
+                            <!-- Black -->
+                            <GradientStop Color="#0D47A1" Offset="1.0"/>
+                            <!-- Royal Blue -->
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                </Grid>
+                
+            <Frame CornerRadius="10" Padding="10" Margin="10" BackgroundColor="Transparent">
+                <StackLayout Orientation="Horizontal" Spacing="15" VerticalOptions="Center">
+                    <Frame CornerRadius="25" Padding="0" IsClippedToBounds="True" HeightRequest="50" WidthRequest="50">
+                        <Image x:Name="imgAvatar" 
+                               Aspect="AspectFill" 
+                               Source="default_avatar.png"/>
+                    </Frame>
+                    
+                    <StackLayout VerticalOptions="Center">
+                        <Label x:Name="lblUserName" 
+                               FontSize="20" 
+                               TextColor="#333333"
+                               FontAttributes="Bold" 
+                               Text="{Binding Firstname}"/>
+                        <Label x:Name="lblUserEmail" 
+                               FontSize="14" 
+                               TextColor="{DynamicResource White}"
+                               Text="{Binding Email, Converter={StaticResource EmailMaskConverter}}"/>
+                    </StackLayout>
+                </StackLayout>
+            </Frame>
+
+            <Label x:Name="lblUserRole"
+                   Text="{Binding RoleText}"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   VerticalOptions="End"
+                   Margin="10"
+                   Padding="10" />
+        </Grid>
+    </Border>
+</StackLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Views.Startup.LoadingPage"
+             Shell.NavBarIsVisible="False"
+             Title="LoadingPage">
+
+
+
+    <!--<StackLayout>
+        <ActivityIndicator IsRunning="True" HeightRequest="40" WidthRequest="40" HorizontalOptions="Center" VerticalOptions="Center" />
+    </StackLayout>-->
+
+
+    <Grid RowDefinitions="*, Auto, *">
+        <Image Grid.Row="0" 
+               Source="your_logo.png"
+               HeightRequest="100"
+               Aspect="AspectFit"
+               Margin="0,0,0,20"/>
+
+        <VerticalStackLayout Grid.Row="1" 
+                             Spacing="20" 
+                             VerticalOptions="Center" 
+                             HorizontalOptions="Center">
+            <ActivityIndicator IsRunning="True" 
+                               Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"
+                               HeightRequest="50" 
+                               WidthRequest="50"/>
+
+            <Label Text="Loading..."
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+        </VerticalStackLayout>
+
+        <Label Grid.Row="2"
+               Text="PPM Für Verein - Powered by - LePrasson"
+               FontSize="12"
+               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+               HorizontalOptions="Center"
+               VerticalOptions="End"
+               Margin="0,0,0,20"/> 
+    </Grid>
+
+</ContentPage>

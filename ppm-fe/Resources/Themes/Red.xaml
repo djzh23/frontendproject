@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Resources.Themes.Red">
+
+    <!-- Enhanced Red Theme Colors -->
+    <Color x:Key="Primary">#C62828</Color>
+    <!-- A rich, bold red -->
+    <Color x:Key="PrimaryDark">#B71C1C</Color>
+    <!-- A deep, dark red for contrast -->
+    <Color x:Key="PrimaryDarkText">#E6F3FF</Color>
+    <!-- White text for readability -->
+    <Color x:Key="Secondary">#FF1744</Color>
+    <!-- A bright, energetic red -->
+    <Color x:Key="SecondaryDarkText">#FF8A80</Color>
+    <!-- A soft coral for secondary text -->
+    <Color x:Key="Tertiary">#FF6F61</Color>
+    <!-- A warm, inviting red-orange -->
+
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
+
+    <LinearGradientBrush x:Key="FlyoutBackgroundRed" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FFEBEE" Offset="0.0" />
+        <GradientStop Color="#FFCDD2" Offset="0.3" />
+        <GradientStop Color="#EF9A9A" Offset="0.7" />
+        <GradientStop Color="#E57373" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#8B0000" Offset="0.0" />
+        <!-- DarkRed -->
+        <GradientStop Color="#DC143C" Offset="0.3" />
+        <!-- Crimson -->
+        <GradientStop Color="#FF4500" Offset="0.7" />
+        <!-- OrangeRed -->
+        <GradientStop Color="#FF6347" Offset="1.0" />
+        <!-- Tomato -->
+    </LinearGradientBrush>
+
+    <!-- Primary Button -->
+    <Color x:Key="PrimaryButtonBackgroundColor">#111331</Color>
+    <Color x:Key="PrimaryButtonTextColor">#FFFFFF</Color>
+
+    <!-- Secondary Button -->
+    <Color x:Key="SecondaryButtonBackgroundColor">#27AE60</Color>
+    <Color x:Key="SecondaryButtonTextColor">#FFFFFF</Color>
+
+    <!-- Cancel Button -->
+    <Color x:Key="CancelButtonBackgroundColor">#BDC3C7</Color>
+    <Color x:Key="CancelButtonTextColor">#2C3E50</Color>
+
+    <Color x:Key="FrameOne">#C2889D</Color>
+    <Color x:Key="FrameTwo">#F0F0F0</Color>
+    <Color x:Key="FrameThree">#424242</Color>
+
+    <Color x:Key="LabeledEntryBackgroundColor">#FFE6E6</Color>
+    <Color x:Key="LabeledEntryTextColor">#000000</Color>
+    <Color x:Key="LabeledEntryPlaceholderColor">#666666</Color>
+
+</ResourceDictionary>

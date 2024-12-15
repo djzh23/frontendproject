@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Views.Startup.LoginPage"
+             Shell.NavBarIsVisible="False"
+             xmlns:ctr="clr-namespace:ppm_fe.Controls"
+             Title="LoginPage">
+
+    <Grid>
+        <Image Grid.RowSpan="2" Source="kids.jpg" Aspect="AspectFill" Opacity="0.6" />
+        <Border WidthRequest="330"
+                HeightRequest="650"
+                Opacity="0.97"
+                BackgroundColor="{DynamicResource PrimaryDark}"
+                StrokeShape="RoundRectangle 10,10,10,10" >
+
+            <VerticalStackLayout 
+                    Spacing="25" 
+                    Padding="10,0" 
+                    VerticalOptions="Center">
+
+                <Image Source="logotransparent.png" HeightRequest="150" WidthRequest="150" />
+
+                <ctr:LabeledEntryFrame 
+                    IconSource="icon_email.png"
+                    EntryText="{Binding Email}"
+                    PlaceholderText="Email"
+                    KeyboardType="Email" />
+
+                <ctr:LabeledEntryFrame 
+                    IconSource="password_icon.png"
+                    EntryText="{Binding Password}"
+                    IsPassword="True"
+                    PlaceholderText="Password" />
+
+                <Button 
+                    Text="Login"  
+                    HorizontalOptions="FillAndExpand" 
+                    BackgroundColor="{DynamicResource PrimaryButtonBackgroundColor}"
+                    TextColor="{DynamicResource  PrimaryButtonTextColor}"
+                    CornerRadius="20"  Command="{Binding LoginCommand}" />
+
+                <Grid x:Name="ForgotPasswordGrid"
+                      ColumnDefinitions="Auto,*" 
+                      RowDefinitions="Auto"
+                      HorizontalOptions="End" 
+                      Margin="0,-10,0,30">
+
+                    <Image Source="forgot_password_icon.png"
+                           HeightRequest="20"
+                           WidthRequest="20"
+                           VerticalOptions="Center" />
+
+                    <Label x:Name="ForgotPasswordLabel"
+                           Grid.Column="1"
+                           Text="Passwort vergessen?"  
+                           TextColor="{DynamicResource Tertiary}"
+                           FontSize="Small"
+                           VerticalOptions="Center"
+                           TextDecorations="Underline">
+                    </Label>
+
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnForgotPasswordTapped" />
+                    </Grid.GestureRecognizers>
+
+                </Grid>
+
+                <Grid ColumnDefinitions="4*,*, 3*" ColumnSpacing="10">
+                    <Button 
+                        Grid.Column="0" 
+                        Text="Register" 
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="{DynamicResource SecondaryButtonBackgroundColor}"
+                        TextColor="{DynamicResource SecondaryButtonTextColor}"
+                        CornerRadius="20"
+                        Clicked="OnRegisterButtonClicked" />
+
+                    <ImageButton 
+                        Grid.Column="1"
+                        Source="left_arrow_icon.png"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+
+                    <Label Grid.Column="2" Text="Neu und noch kein Konto?" TextColor="#50b3f2" VerticalOptions="Center" />
+                </Grid>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>
