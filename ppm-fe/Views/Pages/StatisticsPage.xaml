@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Views.Page.StatisticsPage"
+             xmlns:converter="clr-namespace:ppm_fe.Converters"
+             xmlns:vms="clr-namespace:ppm_fe.ViewModels.Pages"
+             Shell.NavBarIsVisible="{OnPlatform Android=true, WinUI=false}"
+             xmlns:micro="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             Title="Statistiks">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:InverseBoolConverter x:Key="InverseBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <!-- Fixed connectivity bar -->
+        <Grid VerticalOptions="Start"
+          ZIndex="1"
+          RowDefinitions="Auto"
+          BackgroundColor="Red" 
+          IsVisible="{Binding IsConnected, Converter={StaticResource InverseBoolConverter}}">
+
+            <Label Text="Keine Internetverbindung" 
+               TextColor="White" 
+               FontSize="14" 
+               FontAttributes="Bold"
+               HorizontalOptions="Center" 
+               VerticalOptions="Center" 
+               Padding="0,5"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <StackLayout Padding="20">
+                <Picker ItemsSource="{Binding Months}" 
+                    SelectedItem="{Binding SelectedMonth}" 
+                    Title="Select Month"/>
+
+                <Label Text="Team Aufteilung" 
+                   FontSize="Large" 
+                   HorizontalOptions="Center"/>
+                <micro:ChartView Chart="{Binding Chart}" 
+                      WidthRequest="400"
+                        HeightRequest="300"/>
+
+                <Label Text="Gender Aufteilung" 
+                   FontSize="Large" 
+                   HorizontalOptions="Center"/>
+                <micro:ChartView Chart="{Binding GenderDistributionChart}" 
+                                   HeightRequest="200"/>
+
+                <Label Text="{Binding Total, StringFormat='Total Kinder: {0}'}"/>
+                <Label Text="{Binding TotalMale, StringFormat='Jungen: {0}'}"/>
+                <Label Text="{Binding TotalFemale, StringFormat='Mädels: {0}'}"/>
+                <Label Text="{Binding AverageChildrenPerTeamPerMonth, StringFormat='Durchschnittlich betreute Kinder pro Team pro Monat : {0:F2}'}"/>
+                <Label Text="{Binding AverageChildrenPerMonth, StringFormat='Durchschnitt betreute Kinder pro Monat: {0:F2}'}"/>
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

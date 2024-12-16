@@ -46,6 +46,7 @@ namespace ppm_fe
             builder.Services.AddSingleton<IBillingService, BillingService>();
             builder.Services.AddSingleton<ILocalPathService, LocalPathService>();
             builder.Services.AddSingleton<ICacheService, CacheService>();
+            builder.Services.AddSingleton<IWorkService, WorkService>();
 
 
             //Views
@@ -57,6 +58,12 @@ namespace ppm_fe
             builder.Services.AddSingleton<BillingPage>();
             builder.Services.AddSingleton<ProfilePage>();
             builder.Services.AddSingleton<SettingPage>();
+
+            builder.Services.AddSingleton<AdminDashboardPage>();
+            builder.Services.AddSingleton<CreateWorkPage>();
+            builder.Services.AddSingleton<AllWorksPage>();
+            builder.Services.AddSingleton<AllUsersWorksPage>();
+            builder.Services.AddSingleton<StatisticsPage>();
 
 
             //View Models
@@ -70,6 +77,12 @@ namespace ppm_fe
             builder.Services.AddSingleton<BillingPageViewModel>();
             builder.Services.AddSingleton<ProfilePageViewModel>();
             builder.Services.AddSingleton<SettingsPageViewModel>();
+
+            builder.Services.AddSingleton<AdminDashboardPageViewModel>();
+            builder.Services.AddSingleton<CreateWorkPageViewModel>();
+            builder.Services.AddSingleton<AllWorksPageViewModel>();
+            builder.Services.AddSingleton<AllUsersWorksPageViewModel>();
+            builder.Services.AddSingleton<StatisticsPageViewModel>();
 
             // Register AppShell
             builder.Services.AddTransient<AppShell>();

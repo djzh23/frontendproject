@@ -306,248 +306,248 @@ namespace ppm_fe.Helpers
                 .Add(new Text(label2).SetFont(font).SetFontSize(fontSize));
         }
 
-        //public static async Task<string> GeneratePdfWithTable(string title, Work work)
-        //{
-        //    using (MemoryStream memoryStream = new MemoryStream())
-        //    {
-        //        await Task.Run(() =>
-        //        {
-        //            PdfWriter writer = new PdfWriter(memoryStream);
-        //            PdfDocument pdfDoc = new PdfDocument(writer);
-        //            pdfDoc.SetDefaultPageSize(PageSize.A4.Rotate());
+        public static async Task<string> GeneratePdfWithTable(string title, Work work)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                await Task.Run(() =>
+                {
+                    PdfWriter writer = new PdfWriter(memoryStream);
+                    PdfDocument pdfDoc = new PdfDocument(writer);
+                    pdfDoc.SetDefaultPageSize(PageSize.A4.Rotate());
 
-        //            // Add content to the PDF
-        //            Document doc = new Document(pdfDoc);
+                    // Add content to the PDF
+                    Document doc = new Document(pdfDoc);
 
-        //            // Add content to the PDF
-        //            PdfFont boldFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
-        //            PdfFont regularFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+                    // Add content to the PDF
+                    PdfFont boldFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+                    PdfFont regularFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
 
-        //            // Add title
-        //            doc.Add(new Paragraph(title).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+                    // Add title
+                    doc.Add(new Paragraph(title).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
 
-        //            // Create a table for the header with two columns (70% and 30%)
-        //            Table headerTable = new Table(UnitValue.CreatePercentArray([10f, 15f, 50f, 5f, 20f])).UseAllAvailableWidth();
+                    // Create a table for the header with two columns (70% and 30%)
+                    Table headerTable = new Table(UnitValue.CreatePercentArray([10f, 15f, 50f, 5f, 20f])).UseAllAvailableWidth();
 
-        //            bool isValidDate = DateTime.TryParse(work.Date, out DateTime parsedDate);
-        //            if (isValidDate)
-        //            {
-        //                string formattedDate = parsedDate.ToString("M/d/yyyy");
+                    bool isValidDate = DateTime.TryParse(work.Date, out DateTime parsedDate);
+                    if (isValidDate)
+                    {
+                        string formattedDate = parsedDate.ToString("M/d/yyyy");
 
-        //                Cell headingCellDatum = new Cell().Add(new Paragraph("Datum"))
-        //                                 .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER) // Align text to the left
-        //                                 .SetVerticalAlignment(iText.Layout.Properties.VerticalAlignment.MIDDLE) // Align text to the left
-        //                                 .SetFont(boldFont) // Set the font to bold
-        //                                 .SetFontSize(14) // Set font size
-        //                                 .SetBold() // Another way to make the text bold if the font supports it
-        //                                 .SetBackgroundColor(ColorConstants.LIGHT_GRAY); // Set background color to light gray
-        //                headerTable.AddCell(headingCellDatum);
-        //                headerTable.AddCell(new Cell().Add(new Paragraph(formattedDate)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
-        //                    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER) // Align text to the left
-        //                    .SetVerticalAlignment(iText.Layout.Properties.VerticalAlignment.MIDDLE) // Align text to the left
-        //                    );
-        //            }
-        //            else
-        //            {
-        //                headerTable.AddCell(new Cell().Add(new Paragraph("Datum: Parsing Error")).SetTextAlignment(iText.Layout.Properties.TextAlignment.LEFT));
-        //            }
-        //            headerTable.AddCell(new Cell().Add(new Paragraph("Ort: " + work.Ort)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
-        //                    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER) // Align text to the left
-        //                    .SetVerticalAlignment(iText.Layout.Properties.VerticalAlignment.MIDDLE)); // Align text to the left);
+                        Cell headingCellDatum = new Cell().Add(new Paragraph("Datum"))
+                                         .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER) // Align text to the left
+                                         .SetVerticalAlignment(iText.Layout.Properties.VerticalAlignment.MIDDLE) // Align text to the left
+                                         .SetFont(boldFont) // Set the font to bold
+                                         .SetFontSize(14) // Set font size
+                                         .SetBold() // Another way to make the text bold if the font supports it
+                                         .SetBackgroundColor(ColorConstants.LIGHT_GRAY); // Set background color to light gray
+                        headerTable.AddCell(headingCellDatum);
+                        headerTable.AddCell(new Cell().Add(new Paragraph(formattedDate)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
+                            .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER) // Align text to the left
+                            .SetVerticalAlignment(iText.Layout.Properties.VerticalAlignment.MIDDLE) // Align text to the left
+                            );
+                    }
+                    else
+                    {
+                        headerTable.AddCell(new Cell().Add(new Paragraph("Datum: Parsing Error")).SetTextAlignment(iText.Layout.Properties.TextAlignment.LEFT));
+                    }
+                    headerTable.AddCell(new Cell().Add(new Paragraph("Ort: " + work.Ort)).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
+                            .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER) // Align text to the left
+                            .SetVerticalAlignment(iText.Layout.Properties.VerticalAlignment.MIDDLE)); // Align text to the left);
 
-        //            string helpersText = work.ListOfHelpers != null
-        //                                    ? string.Join(", ", work.ListOfHelpers.Where(h => h != null))
-        //                                    : string.Empty;
+                    string helpersText = work.ListOfHelpers != null
+                                            ? string.Join(", ", work.ListOfHelpers.Where(h => h != null))
+                                            : string.Empty;
 
-        //            Cell headingCellHepers = new Cell().Add(new Paragraph("Helfer"))
-        //                     .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER) // Align text to the left
-        //                     .SetVerticalAlignment(iText.Layout.Properties.VerticalAlignment.MIDDLE) // Align text to the left
-        //                     .SetFont(boldFont) // Set the font to bold
-        //                     .SetFontSize(14) // Set font size
-        //                     .SetBold() // Another way to make the text bold if the font supports it
-        //                     .SetBackgroundColor(ColorConstants.LIGHT_GRAY); // Set background color to light gray
-        //            headerTable.AddCell(headingCellHepers);
-        //            headerTable.AddCell(new Cell().Add(new Paragraph(helpersText)).SetTextAlignment(iText.Layout.Properties.TextAlignment.LEFT));
+                    Cell headingCellHepers = new Cell().Add(new Paragraph("Helfer"))
+                             .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER) // Align text to the left
+                             .SetVerticalAlignment(iText.Layout.Properties.VerticalAlignment.MIDDLE) // Align text to the left
+                             .SetFont(boldFont) // Set the font to bold
+                             .SetFontSize(14) // Set font size
+                             .SetBold() // Another way to make the text bold if the font supports it
+                             .SetBackgroundColor(ColorConstants.LIGHT_GRAY); // Set background color to light gray
+                    headerTable.AddCell(headingCellHepers);
+                    headerTable.AddCell(new Cell().Add(new Paragraph(helpersText)).SetTextAlignment(iText.Layout.Properties.TextAlignment.LEFT));
 
-        //            doc.Add(headerTable);
+                    doc.Add(headerTable);
 
-        //            // Add some space between header and body
-        //            doc.Add(new Paragraph("\n"));
+                    // Add some space between header and body
+                    doc.Add(new Paragraph("\n"));
 
-        //            // Get the page size
-        //            Rectangle pageSize = doc.GetPdfDocument().GetDefaultPageSize();
-        //            float pageHeight = pageSize.GetHeight();
+                    // Get the page size
+                    Rectangle pageSize = doc.GetPdfDocument().GetDefaultPageSize();
+                    float pageHeight = pageSize.GetHeight();
 
-        //            // Calculate the available height (subtract margins and any other content height)
-        //            float availableHeight = pageHeight - doc.GetTopMargin() - doc.GetBottomMargin();
+                    // Calculate the available height (subtract margins and any other content height)
+                    float availableHeight = pageHeight - doc.GetTopMargin() - doc.GetBottomMargin();
 
-        //            // Create the body table with a single column
-        //            Table bodyTable = new Table(1).UseAllAvailableWidth();
+                    // Create the body table with a single column
+                    Table bodyTable = new Table(1).UseAllAvailableWidth();
 
-        //            Cell headingCell = new Cell().Add(new Paragraph("Plan"))
-        //                                     .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER) // Align text to the left
-        //                                     .SetFont(boldFont) // Set the font to bold
-        //                                     .SetFontSize(14) // Set font size
-        //                                     .SetBold() // Another way to make the text bold if the font supports it
-        //                                     .SetHeight(40) // Set the minimum height
-        //                                     .SetBackgroundColor(ColorConstants.LIGHT_GRAY); // Set background color to light gray
+                    Cell headingCell = new Cell().Add(new Paragraph("Plan"))
+                                             .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER) // Align text to the left
+                                             .SetFont(boldFont) // Set the font to bold
+                                             .SetFontSize(14) // Set font size
+                                             .SetBold() // Another way to make the text bold if the font supports it
+                                             .SetHeight(40) // Set the minimum height
+                                             .SetBackgroundColor(ColorConstants.LIGHT_GRAY); // Set background color to light gray
 
-        //            bodyTable.AddCell(headingCell).SetMinHeight(availableHeight); // Set the minimum height;
+                    bodyTable.AddCell(headingCell).SetMinHeight(availableHeight); // Set the minimum height;
 
-        //            // Create a cell for the paragraph content
-        //            Cell contentCell = new Cell()
-        //                .Add(new Paragraph(work.Plan)
-        //                    .SetTextAlignment(TextAlignment.JUSTIFIED)
-        //                    .SetFontSize(10) // Adjust font size as needed
-        //                )
-        //                .SetPadding(10) // Add some padding
-        //                .SetVerticalAlignment(VerticalAlignment.TOP);
+                    // Create a cell for the paragraph content
+                    Cell contentCell = new Cell()
+                        .Add(new Paragraph(work.Plan)
+                            .SetTextAlignment(TextAlignment.JUSTIFIED)
+                            .SetFontSize(10) // Adjust font size as needed
+                        )
+                        .SetPadding(10) // Add some padding
+                        .SetVerticalAlignment(VerticalAlignment.TOP);
 
-        //            // Add the content cell to the body table
-        //            bodyTable.AddCell(contentCell);
+                    // Add the content cell to the body table
+                    bodyTable.AddCell(contentCell);
 
-        //            // Set properties for automatic text fitting
-        //            bodyTable.SetKeepTogether(true);
-        //            bodyTable.SetSkipFirstHeader(true);
-        //            bodyTable.SetSkipLastFooter(true);
+                    // Set properties for automatic text fitting
+                    bodyTable.SetKeepTogether(true);
+                    bodyTable.SetSkipFirstHeader(true);
+                    bodyTable.SetSkipLastFooter(true);
 
-        //            // Add the body table to the document
-        //            doc.Add(bodyTable);
+                    // Add the body table to the document
+                    doc.Add(bodyTable);
 
-        //            doc.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                    doc.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        //            // Second page - All content in one page
-        //            Table mainTable = new Table(1).UseAllAvailableWidth();
+                    // Second page - All content in one page
+                    Table mainTable = new Table(1).UseAllAvailableWidth();
 
-        //            // Reflection section
-        //            Table reflectionTable = new Table(UnitValue.CreatePercentArray(new float[] { 100f, 0f })).UseAllAvailableWidth();
-        //            Cell reflectionHeadingCell = new Cell(1, 2)
-        //                .Add(new Paragraph("Reflection"))
-        //                .SetTextAlignment(TextAlignment.CENTER)
-        //                .SetFont(boldFont)
-        //                .SetFontSize(14)
-        //                .SetBold()
-        //                .SetBackgroundColor(ColorConstants.LIGHT_GRAY)
-        //                .SetPadding(0); // Increased padding
-                    
-        //            reflectionTable.AddHeaderCell(reflectionHeadingCell);
-        //            reflectionTable.SetWidth(UnitValue.CreatePercentValue(100));
-        //            float fontSize = work.Reflection.Length > 200 ? 8f : 10f; // Adjust font size for long text
-                    
-        //            reflectionTable.AddCell(
-        //                 new Cell()
-        //                     .Add(new Paragraph(work.Reflection)
-        //                     .SetHyphenation(new HyphenationConfig("de", "DE", 3, 3))) // Breaks words with a hyphen
-        //                     .SetFont(regularFont)
-        //                     .SetFontSize(fontSize)
-        //                     .SetFontSize(10)
-        //                     .SetPadding(10)
-        //                     .SetWordSpacing(10f)
-        //             );
-        //            Cell reflectionCell = new Cell().Add(reflectionTable)
-        //                        .SetPadding(10)
-        //                        .SetMinHeight(250);
+                    // Reflection section
+                    Table reflectionTable = new Table(UnitValue.CreatePercentArray(new float[] { 100f, 0f })).UseAllAvailableWidth();
+                    Cell reflectionHeadingCell = new Cell(1, 2)
+                        .Add(new Paragraph("Reflection"))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetFont(boldFont)
+                        .SetFontSize(14)
+                        .SetBold()
+                        .SetBackgroundColor(ColorConstants.LIGHT_GRAY)
+                        .SetPadding(0); // Increased padding
 
-        //            mainTable.AddCell(reflectionCell);
+                    reflectionTable.AddHeaderCell(reflectionHeadingCell);
+                    reflectionTable.SetWidth(UnitValue.CreatePercentValue(100));
+                    float fontSize = work.Reflection.Length > 200 ? 8f : 10f; // Adjust font size for long text
 
-        //            // Kids Data section (20% of the page height)
-        //            Table kidsDataTable = new Table(UnitValue.CreatePercentArray(new float[] { 25f, 25f, 25f, 25f })).UseAllAvailableWidth();
-        //            Cell kidsDataHeadingCell = new Cell(1, 4)
-        //                .Add(new Paragraph("Kinder Zahlen"))
-        //                .SetTextAlignment(TextAlignment.CENTER)
-        //                .SetFont(boldFont)
-        //                .SetFontSize(12)
-        //                .SetBold()
-        //                .SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    reflectionTable.AddCell(
+                         new Cell()
+                             .Add(new Paragraph(work.Reflection)
+                             .SetHyphenation(new HyphenationConfig("de", "DE", 3, 3))) // Breaks words with a hyphen
+                             .SetFont(regularFont)
+                             .SetFontSize(fontSize)
+                             .SetFontSize(10)
+                             .SetPadding(10)
+                             .SetWordSpacing(10f)
+                     );
+                    Cell reflectionCell = new Cell().Add(reflectionTable)
+                                .SetPadding(10)
+                                .SetMinHeight(250);
 
-        //            kidsDataTable.AddHeaderCell(kidsDataHeadingCell);
-        //            kidsDataTable.AddCell(new Cell().Add(new Paragraph("Altersgroupe")).SetFont(boldFont).SetFontSize(9));
-        //            kidsDataTable.AddCell(new Cell().Add(new Paragraph("Jungen")).SetFont(boldFont).SetFontSize(9));
-        //            kidsDataTable.AddCell(new Cell().Add(new Paragraph("Mädchen")).SetFont(boldFont).SetFontSize(9));
-        //            kidsDataTable.AddCell(new Cell().Add(new Paragraph("Zusammen")).SetFont(boldFont).SetFontSize(9));
+                    mainTable.AddCell(reflectionCell);
 
-        //            // Kids Data Section
-        //            int totalBoys = 0;
-        //            int totalGirls = 0;
+                    // Kids Data section (20% of the page height)
+                    Table kidsDataTable = new Table(UnitValue.CreatePercentArray(new float[] { 25f, 25f, 25f, 25f })).UseAllAvailableWidth();
+                    Cell kidsDataHeadingCell = new Cell(1, 4)
+                        .Add(new Paragraph("Kinder Zahlen"))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetFont(boldFont)
+                        .SetFontSize(12)
+                        .SetBold()
+                        .SetBackgroundColor(ColorConstants.LIGHT_GRAY);
 
-        //            // Kids Data Section
-        //            foreach (var kidData in work.KidsData)
-        //            {
-        //                kidsDataTable.AddCell(new Cell().Add(new Paragraph(kidData.AgeRange ?? "")).SetFont(regularFont).SetFontSize(9));
+                    kidsDataTable.AddHeaderCell(kidsDataHeadingCell);
+                    kidsDataTable.AddCell(new Cell().Add(new Paragraph("Altersgroupe")).SetFont(boldFont).SetFontSize(9));
+                    kidsDataTable.AddCell(new Cell().Add(new Paragraph("Jungen")).SetFont(boldFont).SetFontSize(9));
+                    kidsDataTable.AddCell(new Cell().Add(new Paragraph("Mädchen")).SetFont(boldFont).SetFontSize(9));
+                    kidsDataTable.AddCell(new Cell().Add(new Paragraph("Zusammen")).SetFont(boldFont).SetFontSize(9));
 
-        //                kidsDataTable.AddCell(new Cell().Add(new Paragraph(kidData.NumberBoys != null ? kidData.NumberBoys.ToString() : "")).SetFont(regularFont).SetFontSize(9));
-        //                kidsDataTable.AddCell(new Cell().Add(new Paragraph(kidData.NumberGirls != null ? kidData.NumberGirls.ToString() : "")).SetFont(regularFont).SetFontSize(9));
+                    // Kids Data Section
+                    int totalBoys = 0;
+                    int totalGirls = 0;
 
-        //                string rowTotal = (kidData.NumberBoys != null && kidData.NumberGirls != null) ?
-        //                       (kidData.NumberBoys + kidData.NumberGirls).ToString() : "";
-        //                //int rowTotal = (kidData.NumberBoys != 0 + (kidData.NumberGirls != 0);
-        //                kidsDataTable.AddCell(new Cell().Add(new Paragraph(rowTotal.ToString())).SetFont(regularFont).SetFontSize(9));
+                    // Kids Data Section
+                    foreach (var kidData in work.KidsData)
+                    {
+                        kidsDataTable.AddCell(new Cell().Add(new Paragraph(kidData.AgeRange ?? "")).SetFont(regularFont).SetFontSize(9));
 
-        //                if (kidData != null)
-        //                {
-        //                    totalBoys += kidData.NumberBoys;
-        //                    totalGirls += kidData.NumberGirls;
-        //                }
-        //            }
+                        kidsDataTable.AddCell(new Cell().Add(new Paragraph(kidData.NumberBoys != null ? kidData.NumberBoys.ToString() : "")).SetFont(regularFont).SetFontSize(9));
+                        kidsDataTable.AddCell(new Cell().Add(new Paragraph(kidData.NumberGirls != null ? kidData.NumberGirls.ToString() : "")).SetFont(regularFont).SetFontSize(9));
 
-        //            //Cell kidsDataCell = new Cell().Add(kidsDataTable).SetHeight(130); // Kept the same height
-        //            Cell kidsDataCell = new Cell().Add(kidsDataTable).SetHeight(150);
-        //            mainTable.AddCell(kidsDataCell);
+                        string rowTotal = (kidData.NumberBoys != null && kidData.NumberGirls != null) ?
+                               (kidData.NumberBoys + kidData.NumberGirls).ToString() : "";
+                        //int rowTotal = (kidData.NumberBoys != 0 + (kidData.NumberGirls != 0);
+                        kidsDataTable.AddCell(new Cell().Add(new Paragraph(rowTotal.ToString())).SetFont(regularFont).SetFontSize(9));
 
-        //            // Add footer row with totals
-        //            Cell totalCell = new Cell(1, 4)
-        //                .Add(new Paragraph($"Total Jungen: {totalBoys} | Total Mädchen: {totalGirls} | Total Kinderzahl: {totalBoys + totalGirls}"))
-        //                .SetTextAlignment(TextAlignment.CENTER)
-        //                .SetFont(boldFont)
-        //                .SetFontSize(10)
-        //                .SetBold()
-        //                .SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                        if (kidData != null)
+                        {
+                            totalBoys += kidData.NumberBoys;
+                            totalGirls += kidData.NumberGirls;
+                        }
+                    }
 
-        //            kidsDataTable.AddFooterCell(totalCell);
+                    //Cell kidsDataCell = new Cell().Add(kidsDataTable).SetHeight(130); // Kept the same height
+                    Cell kidsDataCell = new Cell().Add(kidsDataTable).SetHeight(150);
+                    mainTable.AddCell(kidsDataCell);
 
-        //            // Additional information section (20% of the page height)
-        //            Table additionalInfoTable = new Table(UnitValue.CreatePercentArray(new float[] { 33.33f, 33.33f, 33.33f })).UseAllAvailableWidth();
+                    // Add footer row with totals
+                    Cell totalCell = new Cell(1, 4)
+                        .Add(new Paragraph($"Total Jungen: {totalBoys} | Total Mädchen: {totalGirls} | Total Kinderzahl: {totalBoys + totalGirls}"))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetFont(boldFont)
+                        .SetFontSize(10)
+                        .SetBold()
+                        .SetBackgroundColor(ColorConstants.LIGHT_GRAY);
 
-        //            // Additional information section (Parent Contact, Wellbeing, Wishes)
-        //            Cell parentContactCell = new Cell()
-        //                .Add(new Paragraph("Elternkontakt").SetFont(boldFont).SetFontSize(10))
-        //                .Add(new Paragraph(work.ParentContact ?? "").SetFont(regularFont).SetFontSize(9))
-        //                .SetTextAlignment(TextAlignment.CENTER)
-        //                .SetVerticalAlignment(VerticalAlignment.MIDDLE)
-        //                .SetPadding(5);
+                    kidsDataTable.AddFooterCell(totalCell);
 
-        //            Cell wellbeingChildrenCell = new Cell()
-        //                .Add(new Paragraph("Kinderswohl").SetFont(boldFont).SetFontSize(10))
-        //                .Add(new Paragraph(work.WellbeingOfChildren ?? "").SetFont(regularFont).SetFontSize(9))
-        //                .SetTextAlignment(TextAlignment.CENTER)
-        //                .SetVerticalAlignment(VerticalAlignment.MIDDLE)
-        //                .SetPadding(5);
+                    // Additional information section (20% of the page height)
+                    Table additionalInfoTable = new Table(UnitValue.CreatePercentArray(new float[] { 33.33f, 33.33f, 33.33f })).UseAllAvailableWidth();
 
-        //            Cell wishesCell = new Cell()
-        //                .Add(new Paragraph("Wünsche").SetFont(boldFont).SetFontSize(10))
-        //                .Add(new Paragraph(work.Wishes ?? "").SetFont(regularFont).SetFontSize(9))
-        //                .SetTextAlignment(TextAlignment.CENTER)
-        //                .SetVerticalAlignment(VerticalAlignment.MIDDLE)
-        //                .SetPadding(5);
+                    // Additional information section (Parent Contact, Wellbeing, Wishes)
+                    Cell parentContactCell = new Cell()
+                        .Add(new Paragraph("Elternkontakt").SetFont(boldFont).SetFontSize(10))
+                        .Add(new Paragraph(work.ParentContact ?? "").SetFont(regularFont).SetFontSize(9))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .SetPadding(5);
 
-        //            additionalInfoTable.AddCell(parentContactCell);
-        //            additionalInfoTable.AddCell(wellbeingChildrenCell);
-        //            additionalInfoTable.AddCell(wishesCell);
+                    Cell wellbeingChildrenCell = new Cell()
+                        .Add(new Paragraph("Kinderswohl").SetFont(boldFont).SetFontSize(10))
+                        .Add(new Paragraph(work.WellbeingOfChildren ?? "").SetFont(regularFont).SetFontSize(9))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .SetPadding(5);
 
-        //            Cell additionalInfoCell = new Cell().Add(additionalInfoTable); // Reduced height
-        //            mainTable.AddCell(additionalInfoCell);
-        //            doc.Add(mainTable);
-        //            pdfDoc.Close();
+                    Cell wishesCell = new Cell()
+                        .Add(new Paragraph("Wünsche").SetFont(boldFont).SetFontSize(10))
+                        .Add(new Paragraph(work.Wishes ?? "").SetFont(regularFont).SetFontSize(9))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .SetPadding(5);
 
-        //            // Convert the MemoryStream back to base64
-        //            string outputBase64 = Convert.ToBase64String(memoryStream.ToArray());
-        //            pdfDoc.Close();
-        //        });
+                    additionalInfoTable.AddCell(parentContactCell);
+                    additionalInfoTable.AddCell(wellbeingChildrenCell);
+                    additionalInfoTable.AddCell(wishesCell);
 
-        //        // Convert MemoryStream to base64 string
-        //        byte[] pdfBytes = memoryStream.ToArray();
-        //        return Convert.ToBase64String(pdfBytes);
-        //    }
-        //}
+                    Cell additionalInfoCell = new Cell().Add(additionalInfoTable); // Reduced height
+                    mainTable.AddCell(additionalInfoCell);
+                    doc.Add(mainTable);
+                    pdfDoc.Close();
+
+                    // Convert the MemoryStream back to base64
+                    string outputBase64 = Convert.ToBase64String(memoryStream.ToArray());
+                    pdfDoc.Close();
+                });
+
+                // Convert MemoryStream to base64 string
+                byte[] pdfBytes = memoryStream.ToArray();
+                return Convert.ToBase64String(pdfBytes);
+            }
+        }
     }
 }

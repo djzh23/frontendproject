@@ -446,8 +446,8 @@ namespace ppm_fe.ViewModels.Pages
                 string formattedDate = Date.ToString("yyyy-MM-dd");
 
                 string fileName = IsVorOrt
-                    ? $"{formattedDate}-{SelectedMonth}-Rechnung-{BillingNumber}.pdf"
-                    : $"{formattedDate}-{SelectedMonth}-Rechnung-Ausflug-{BillingNumber}.pdf";
+                    ? $"{formattedDate}-{SelectedMonth}-rechnung-{BillingNumber}.pdf"
+                    : $"{formattedDate}-{SelectedMonth}-ausflug-rechnung-{BillingNumber}.pdf";
 
                 string destinationFolder = _pathService?.LocalBillsFolder
                     ?? throw new InvalidOperationException("LocalBillsFolder is not set.");
@@ -587,7 +587,10 @@ namespace ppm_fe.ViewModels.Pages
             {
                 IsLoading = false;
                 SelectedMonthTwo = null;
-                Billings = new ObservableCollection<Billing>(res.Data);
+                if (res.Data != null)
+                {
+                    Billings = new ObservableCollection<Billing>(res.Data);
+                }
 
                 _currentPage++;
                 _paginationInfo = res.Pagination;
