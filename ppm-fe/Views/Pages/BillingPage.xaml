@@ -337,9 +337,9 @@
               BackgroundColor="Black" Opacity="0.5" 
               HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
-                <ActivityIndicator IsRunning="True" Color="White"/>
+                <ActivityIndicator IsRunning="True" Color="Black"/>
                 <Label Text="{Binding LoadingController.LoadingMessage}" 
-                       TextColor="White" HorizontalOptions="Center" />
+                       TextColor="Black" HorizontalOptions="Center" />
             </StackLayout>
         </Grid>
     </Grid>

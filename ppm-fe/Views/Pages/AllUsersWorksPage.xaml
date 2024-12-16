@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Views.Page.AllUsersWorksPage"
+             xmlns:ctr="clr-namespace:ppm_fe.Controls"
+             xmlns:vm="clr-namespace:ppm_fe.ViewModels.Pages"
+             x:DataType="vm:AllUsersWorksPageViewModel"
+             xmlns:converter="clr-namespace:ppm_fe.Converters"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             BackgroundColor="{DynamicResource Tertiary}" >
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:InverseBoolConverter x:Key="InverseBoolConverter"/>
+            <converter:DateOnlyConverter x:Key="DateOnlyConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <!-- Fixed connectivity bar -->
+        <Grid VerticalOptions="Start"
+          ZIndex="1"
+          RowDefinitions="Auto"
+          BackgroundColor="Red" 
+          IsVisible="{Binding IsConnected, Converter={StaticResource InverseBoolConverter}}">
+
+            <Label Text="Keine Internetverbindung" 
+               TextColor="White" 
+               FontSize="14" 
+               FontAttributes="Bold"
+               HorizontalOptions="Center" 
+               VerticalOptions="Center" 
+               Padding="0,5"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1" >
+        <Grid>
+            <Grid RowDefinitions="Auto,*">
+                <VerticalStackLayout Grid.Row="0"  >
+                    <Grid ColumnDefinitions="*,*" Padding="10">
+                        <Button Text="letzte hinzugefügte Einsätze" 
+                            WidthRequest="220"
+                            Command="{Binding FetchDataCommand}"
+                                 BackgroundColor="{DynamicResource SecondaryButtonBackgroundColor}"
+                                 TextColor="{DynamicResource SecondaryButtonTextColor}"
+                                 HorizontalOptions="Start"
+                                 CornerRadius="5"
+                                 Margin="0,0,5,0"/>
+
+                        <Picker Grid.Column="1"
+                                 Title="Filter nach Team"
+                                 ItemsSource="{Binding Teams}"
+                                 SelectedItem="{Binding SelectedTeam}"
+                                 HorizontalOptions="End"
+                                 TitleColor="{DynamicResource PrimaryDarkText}"
+                                 TextColor="{DynamicResource PrimaryDarkText}"
+                                 BackgroundColor="{DynamicResource LabeledEntryPlaceholderColor}"
+                                 Margin="5,0,0,0"/>
+                    </Grid>
+                </VerticalStackLayout>
+
+                <ActivityIndicator IsRunning="{Binding IsLoading}" 
+                   IsVisible="{Binding IsLoading}"
+                   VerticalOptions="Center" 
+                   HorizontalOptions="Center"/>
+                <RefreshView Grid.Row="1"  >
+
+                    <CollectionView ItemsSource="{Binding Works}" >
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Margin="10,5" Padding="15" BorderColor="#E0E0E0" CornerRadius="10" HasShadow="True">
+                                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                                        
+                                        <StackLayout Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="10">
+                                            <Label Text="{Binding Team}" FontAttributes="Bold" FontSize="18" VerticalOptions="Center" />
+                                            <Label Text="{Binding Date, Converter={StaticResource DateOnlyConverter}}" TextColor="#666666" FontSize="14" />
+                                        </StackLayout>
+
+                                            <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding CreatorName}" FontSize="16" VerticalOptions="Center" TextColor="DarkBlue" />
+
+
+                                        <Grid Grid.Row="2" Grid.ColumnSpan="2">
+                                            <ctr:CustomButton 
+                                                ButtonText="Einsatz Pdf Öffnen"
+                                                EnabledColor="{DynamicResource PrimaryButtonBackgroundColor}"
+                                                DisabledColor="{DynamicResource CancelButtonBackgroundColor}"
+                                                ButtonCommand="{Binding Source={RelativeSource AncestorType={x:Type vm:AllUsersWorksPageViewModel}}, Path=DownloadAndOpenPdfCommand}"
+                                                ButtonCommandParameter="{Binding .}"
+                                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                                                HorizontalOptions="Fill"
+                                                VerticalOptions="Center"
+                                                Margin="0,15,0,0"/>
+                                        </Grid>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                        <CollectionView.EmptyView>
+                            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                <Label Text="Keine Einsätze gefunden" HorizontalOptions="Center" TextColor="#666666" />
+                            </StackLayout>
+                        </CollectionView.EmptyView>
+
+                            <!-- Footer Template für den Load More Button -->
+                            <CollectionView.Footer>
+
+
+                                <!-- Load More Button mit verbessertem UI -->
+                                <!-- Load More Button mit verbessertem UI -->
+                                <!--<Grid WidthRequest="100" 
+                                      HeightRequest="150" 
+                                      Margin="5">-->
+
+                                <Grid WidthRequest="100" 
+                                      HeightRequest="150"
+                                      Margin="5">
+
+                                    <VerticalStackLayout Spacing="15" 
+                                        HorizontalOptions="Center" 
+                                        VerticalOptions="Center">
+                                        <ActivityIndicator IsRunning="{Binding IsLoadingMore}"
+                                            IsVisible="{Binding IsLoadingMore}"
+                                            HeightRequest="25"
+                                            WidthRequest="25"
+                                            Color="Gray"/>
+
+                                        <ctr:CustomButton 
+                                            ButtonText="Mehr laden"
+                                            EnabledColor="{DynamicResource SecondaryButtonBackgroundColor}"
+                                            DisabledColor="{DynamicResource CancelButtonBackgroundColor}"
+                                            ButtonCommand="{Binding LoadMoreCommand}"
+                                            IsEnabled="{Binding HasMoreItems}"
+                                            HorizontalOptions="Center"
+                                            WidthRequest="150"
+                                            HeightRequest="40"
+                                            Margin="0,15,0,0" />
+
+                                        <!-- Anzahl verbleibender Items -->
+                                        <Label TextColor="black"
+                                               Opacity="0.8"
+                                               FontSize="12"
+                                               HorizontalOptions="Center">
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}{0} von {1}">
+                                                    <Binding Path="Works.Count"/>
+                                                    <Binding Path="TotalItems"/>
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                </Grid>
+
+                                <!--<StackLayout IsVisible="{Binding HasMoreItems}" 
+                                             Spacing="50">
+                                    --><!-- Loading Indicator --><!--
+                                    <ActivityIndicator 
+                                        IsRunning="{Binding IsLoadingMore}"
+                                        IsVisible="{Binding IsLoadingMore}"
+                                        Color="black"
+                                        HeightRequest="24"
+                                        WidthRequest="24"/>
+
+                                    <ctr:CustomButton 
+                                        ButtonText="Mehr laden"
+                                        EnabledColor="{DynamicResource SecondaryButtonBackgroundColor}"
+                                        DisabledColor="{DynamicResource CancelButtonBackgroundColor}"
+                                        ButtonCommand="{Binding LoadMoreCommand}"
+                                        IsEnabled="{Binding !HasMoreItems, Converter={StaticResource InverseBoolConverter}}"
+                                        HorizontalOptions="Center"
+                                        Margin="10" />
+
+                                    
+
+
+                                </StackLayout>-->
+                            </CollectionView.Footer>
+                        </CollectionView>
+                </RefreshView>
+            </Grid>
+        </Grid>
+        </ScrollView>
+        <Grid IsVisible="{Binding LoadingController.IsLoading}"
+          BackgroundColor="Black" Opacity="0.5" 
+          HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                <ActivityIndicator IsRunning="True" Color="White"/>
+                <Label Text="{Binding LoadingController.LoadingMessage}" 
+                               TextColor="White" HorizontalOptions="Center" />
+            </StackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

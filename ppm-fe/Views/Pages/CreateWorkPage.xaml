@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Views.Page.CreateWorkPage"
+             xmlns:vm="clr-namespace:ppm_fe.ViewModels.Pages"
+             BackgroundImageSource="kids.jpg"
+             xmlns:ctr="clr-namespace:ppm_fe.Controls"
+             xmlns:converter="clr-namespace:ppm_fe.Converters"
+             xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+             xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
+             Shell.NavBarIsVisible="{OnPlatform Android=true, WinUI=false}"
+             Shell.TitleColor="White"  >
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:InverseBoolConverter x:Key="InverseBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <Border Padding="0"
+                Margin="-2"
+                Opacity="0.98"
+                BackgroundColor="{DynamicResource Tertiary}">
+
+            <Border.Background>
+                <DynamicResource Key="GradientBrush" />
+            </Border.Background>
+
+            <Border.Content>
+                <StackLayout Padding="0">
+                    <Grid Grid.Row="0" 
+                          BackgroundColor="Red" 
+                          IsVisible="{Binding IsConnected, Converter={StaticResource InverseBoolConverter}}">
+                        <Label Text="Keine Internetverbindung" 
+                               TextColor="White" 
+                               FontSize="14" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center" 
+                               Padding="0,5"/>
+                    </Grid>
+
+                    <Grid HeightRequest="50" BackgroundColor="Grey" Margin="0,0,0,20">
+                        <Label Text="PLÄNUM - Hier sind die Einsätze einzeln zu erstellen" 
+                           TextColor="Black"
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center" 
+                           FontAttributes="Italic"/>
+                    </Grid>
+
+                    <Grid>
+                        <Grid ColumnDefinitions="*,*">
+                            <ctr:LabeledDatePicker  Grid.Column="0"  
+                                                    MyLabel="Datum" 
+                                                    Date="{Binding Date}" 
+                                                    HorizontalOptions="StartAndExpand" />
+
+                            <ctr:LabeledSwitch Grid.Column="1"
+                                               HorizontalOptions="End"
+                                               MyLabel="Vorort"
+                                               IsToggled="{Binding IsVorOrt}" />
+                        </Grid>
+                    </Grid>
+
+                    <ctr:LabeledPicker MyLabel="Team" ItemsSource="{Binding Teams}" SelectedItem="{Binding SelectedTeam}"  />
+                    <ctr:LabeledEntry  MyLabel="Ort" Text="{Binding Ort}" Placeholder="Enter Ort"   />
+                    <ctr:LabeledTimePicker  LabelText="Arbeitsstart:"   Time="{Binding Startwork}" />
+
+                    <Border Padding="10" StrokeShape="RoundRectangle 10,10,10,10" BackgroundColor="{DynamicResource LabeledEntryBackgroundColor}" Margin="5"  >
+                        <VerticalStackLayout Spacing="10" >
+                            <Label Text="Helfern:" FontSize="18" FontAttributes="Bold" TextColor="{DynamicResource Tertiary}"/>
+
+                            <ctr:LabeledEntry  x:Name="HelperEntry" MyLabel="Helfer Name" Text="{Binding NewHelper}" Placeholder="Add Helfer"   />
+                            <Button Grid.Column="1"  Command="{Binding AddHelperCommand}" 
+                                    VerticalOptions="Center"
+                                    FontAttributes="Bold"
+                                    FontSize="16"    
+                                    WidthRequest="250"
+                                    Text="hinzufügen"
+                                    TextColor="{DynamicResource SecondaryButtonTextColor}"
+                                    BackgroundColor="{DynamicResource SecondaryButtonBackgroundColor}"
+                                    CommandParameter="{Binding Source={x:Reference HelperEntry}, Path=Text}"
+                                    CornerRadius="20" />
+
+                            <CollectionView ItemsSource="{Binding Helpers}" 
+                                            Margin="10" 
+                                            WidthRequest="300" >
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"/>
+                                </CollectionView.ItemsLayout>
+
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Frame Padding="5" 
+                                               CornerRadius="10" 
+                                               BorderColor="{DynamicResource Primary}" 
+                                               BackgroundColor="{DynamicResource FrameOne}"
+                                               Margin="20,0,20,5">
+                                            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="2">
+                                                <Label Text="{Binding .}" 
+                                                       VerticalOptions="Center" 
+                                                       FontSize="16"
+                                                       TextColor="{DynamicResource PrimaryTextColor}"/>
+
+                                                <ImageButton Grid.Column="1"
+                                                             Source="close_circle_32.png"
+                                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateWorkPageViewModel}}, Path=DeleteHelperCommand}"
+                                                             CommandParameter="{Binding .}"
+                                                             WidthRequest="24"
+                                                             HeightRequest="24"
+                                                             HorizontalOptions="End"
+                                                             VerticalOptions="Center"
+                                                             BackgroundColor="Transparent"/>
+                                            </Grid>
+                                        </Frame>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+
+                                <CollectionView.Footer>
+                                    <BoxView HeightRequest="10" Color="Transparent"/>
+                                </CollectionView.Footer>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <ctr:LabeledEditor  x:Name="PlanEntry" MyLabel="Plan" Text="{Binding Plan, Mode=TwoWay}" Placeholder="Kurzer Text"   />
+
+                    <ctr:CustomButton 
+                        ButtonText="Einsatz erstellen"
+                        EnabledColor="{DynamicResource PrimaryButtonBackgroundColor}"
+                        DisabledColor="{DynamicResource CancelButtonBackgroundColor}"
+                        ButtonCommand="{Binding CreateWorkCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                        HorizontalOptions="Center"
+                        Margin="0,20,0,20" />
+
+                    <ActivityIndicator IsRunning="True" 
+                                       IsVisible="{Binding IsBusy}"
+                                       Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"
+                                       HeightRequest="50" 
+                                       WidthRequest="50"/>
+                    <ctr:CustomButton 
+                        ButtonText="Alle zurücksetzen"
+                        EnabledColor="{DynamicResource CancelButtonBackgroundColor}"
+                        ButtonCommand="{Binding CancelWorkCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                        HorizontalOptions="Center" />
+                </StackLayout>
+            </Border.Content>
+        </Border>
+    </ScrollView>
+</ContentPage>
