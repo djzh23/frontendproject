@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <network-security-config>
 	<domain-config cleartextTrafficPermitted="true">
+		<!-- For Local Test, uncomment this line and put your own IP-Adress, For testing the app localy with Android Emulator -->
+		<!--<domain includeSubdomains="true">Local_IP_ADRESS</domain>-->
+		
 		<domain includeSubdomains="true">64.225.93.52</domain>
+		
 	</domain-config>
 </network-security-config>

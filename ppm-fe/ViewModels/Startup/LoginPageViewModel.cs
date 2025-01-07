@@ -1,35 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Newtonsoft.Json;
 using ppm_fe.Helpers;
 using ppm_fe.Models;
 using ppm_fe.Services;
 using ppm_fe.Views.Startup;
-using Newtonsoft.Json;
 
 namespace ppm_fe.ViewModels
 {
     public partial class LoginPageViewModel : BaseViewModel
     {
         private readonly IAuthService _authService;
-
-        private bool _isRefreshing;
-        public bool IsRefreshing
-        {
-            get => _isRefreshing;
-            set => SetProperty(ref _isRefreshing, value);
-        }
-
-        [ObservableProperty]
-        private string? _email;
-
-        [ObservableProperty]
-        private string? _password;
-
-        #region Commands
-
-        public IAsyncRelayCommand LoginCommand { get; }
-        public IAsyncRelayCommand ForgotPasswordCommand { get; }
 
         public LoginPageViewModel(IAuthService authService)
         {
@@ -49,6 +31,20 @@ namespace ppm_fe.ViewModels
             });
         }
 
+        #region properties
+        [ObservableProperty]
+        private string? _email;
+
+        [ObservableProperty]
+        private string? _password;
+        #endregion
+
+        #region Commands
+        public IAsyncRelayCommand LoginCommand { get; }
+        public IAsyncRelayCommand ForgotPasswordCommand { get; }
+        #endregion
+
+        #region tasks
         private async Task Login()
         {
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
@@ -62,8 +58,7 @@ namespace ppm_fe.ViewModels
                 // show Loading Page
                 await Shell.Current.GoToAsync($"//{nameof(LoadingPage)}");
 
-                IsBusy = true;
-                IsRefreshing = true;
+                IsLoading = true;
 
                 var loginResult = await _authService.Login(Email, Password);
                 if (loginResult.Success)
@@ -96,47 +91,43 @@ namespace ppm_fe.ViewModels
             }
             finally
             {
-                IsRefreshing = false;
-                IsBusy = false;
+                IsLoading = false;
             }
         }
 
         private async Task ForgotPassword()
         {
-            if (Email is null)
+            if (string.IsNullOrWhiteSpace(Email))
             {
                 await DisplayAlertAsync("Fehler", "Bitte E-Mail in das Feld eingeben");
                 return;
             }
 
-            IsRefreshing = true;
+            IsLoading = true;
             try
             {
-                if (!string.IsNullOrWhiteSpace(Email))
+                var response = await _authService.ForgetPassword(Email);
+                if (response != null)
                 {
-                    bool forgetPasswordSuccess = await _authService.ForgetPassword(Email);
-                    if (forgetPasswordSuccess)
+                    IsLoading = false;
+                    var window = Application.Current?.Windows.Count > 0 ? Application.Current.Windows[0] : null;
+                    if (window?.Page != null)
                     {
-                        IsRefreshing = false;
-                        var window = Application.Current?.Windows.Count > 0 ? Application.Current.Windows[0] : null;
-                        if (window?.Page != null)
-                        {
-                            await DisplayAlertAsync("Konfirmation", "Link zum Zurücksetzen des Passworts erfolgreich an die E-Mail gesendet!");
-                        }
+                        string alertTitle = response.Success ? "Erfolg" : "Fehler";
+                        await DisplayAlertAsync(alertTitle, response.Message);
                     }
                 }
             }
             catch (Exception ex)
             {
                 LoggerHelper.LogError(this.GetType().Name, nameof(ForgotPassword), ex.Message, new { Email }, ex.StackTrace);
+                await DisplayAlertAsync("Fehler", Constants.Properties.UnexpectedError);
             }
             finally
             {
-                IsRefreshing = false;
-                IsBusy = false;
+                IsLoading = false;
             }
         }
-
         #endregion
     }
 }

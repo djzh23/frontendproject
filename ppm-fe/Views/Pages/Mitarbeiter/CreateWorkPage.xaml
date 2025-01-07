@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Views.Page.CreateWorkPage"
+             xmlns:vm="clr-namespace:ppm_fe.ViewModels.Pages"
+             xmlns:ctr="clr-namespace:ppm_fe.Controls"
+             xmlns:converter="clr-namespace:ppm_fe.Converters"
+             xmlns:constants="clr-namespace:ppm_fe.Constants"
+             xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+             xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
+             Title="Einsatzserstellung"
+             Shell.TitleColor="White"
+             Shell.NavBarIsVisible="{OnPlatform Android=true, WinUI=false}" >
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:InverseBoolConverter x:Key="InverseBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <Grid>
+        <Grid RowDefinitions="Auto,Auto,*" >
+            <Grid.Background>
+                <DynamicResource Key="GradientBrush" />
+            </Grid.Background>
+
+            <Grid Grid.Row="0"
+              BackgroundColor="Red" 
+              IsVisible="{Binding IsConnected, Converter={StaticResource InverseBoolConverter}}">
+                        <Label Text="Keine Internetverbindung" 
+                           TextColor="White" 
+                           FontSize="14" 
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center" 
+                           Padding="0,5"/>
+                </Grid>
+
+            <Grid Grid.Row="1"
+              HeightRequest="50" 
+              BackgroundColor="Grey">
+                <Label Text="PLÄNUM - Hier sind die Einsätze einzeln zu erstellen" 
+                   TextColor="Black"
+                   HorizontalOptions="Center" 
+                   VerticalOptions="Center" 
+                   FontAttributes="Italic"/>
+            </Grid>
+
+            <ScrollView Grid.Row="2" BackgroundColor="Transparent">
+                <Border Padding="0"
+                    Margin="-2"
+                    Opacity="0.98">
+
+                    <Border.Content>
+                        <StackLayout Margin="10,10" Spacing="10" BackgroundColor="Transparent">
+                            <Grid Margin="0,10,0,0">
+                                <Grid ColumnDefinitions="*,*">
+                                    <ctr:LabeledDatePicker Grid.Column="0"  
+                                             MyLabel="Datum" 
+                                             Date="{Binding Date}" 
+                                             HorizontalOptions="StartAndExpand" />
+
+                                    <ctr:LabeledSwitch Grid.Column="1"
+                                          HorizontalOptions="End"
+                                          MyLabel="Vorort"
+                                          IsToggled="{Binding IsVorOrt}" />
+                                </Grid>
+                            </Grid>
+
+                            <ctr:LabeledPicker 
+                                MyLabel="Team" 
+                                ItemsSource="{Binding Source={x:Static constants:Properties.Teams}}" 
+                                SelectedItem="{Binding SelectedTeam}" />
+
+                            <ctr:LabeledEntry  MyLabel="Ort" Text="{Binding Ort}" Placeholder="Enter Ort"   />
+
+                            <ctr:LabeledTimePicker  LabelText="Arbeitsstart:"   Time="{Binding Startwork}" />
+
+                            <Border Padding="10" StrokeShape="RoundRectangle 10,10,10,10" BackgroundColor="{DynamicResource LabeledEntryBackgroundColor}" Margin="5"  >
+                                <VerticalStackLayout Spacing="10" >
+                                    <Label Text="Helfern:" FontSize="18" FontAttributes="Bold" TextColor="{DynamicResource Tertiary}"/>
+
+                                    <ctr:LabeledEntry  x:Name="HelperEntry" MyLabel="Helfer Name" Text="{Binding NewHelper}" Placeholder="Add Helfer"   />
+
+                                    <Button Grid.Column="1"  Command="{Binding AddHelperCommand}" 
+                                            VerticalOptions="Center"
+                                            FontAttributes="Bold"
+                                            FontSize="16"    
+                                            WidthRequest="250"
+                                            Text="hinzufügen"
+                                            TextColor="{DynamicResource SecondaryButtonTextColor}"
+                                            BackgroundColor="{DynamicResource SecondaryButtonBackgroundColor}"
+                                            CommandParameter="{Binding Source={x:Reference HelperEntry}, Path=Text}"
+                                            CornerRadius="20" />
+
+                                    <CollectionView ItemsSource="{Binding Helpers}" 
+                                        Margin="0" 
+                                        WidthRequest="300" >
+
+                                        <CollectionView.ItemsLayout>
+                                            <LinearItemsLayout Orientation="Vertical" ItemSpacing="5"/>
+                                        </CollectionView.ItemsLayout>
+
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Frame Padding="2" 
+                                                   CornerRadius="10" 
+                                                   BorderColor="{DynamicResource Primary}" 
+                                                   BackgroundColor="{DynamicResource FrameOne}"
+                                                   Margin="20,0,20,5">
+                                                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="1">
+                                                        <Label Text="{Binding .}" 
+                                                           VerticalOptions="Center" 
+                                                           FontSize="16"
+                                                           TextColor="{DynamicResource PrimaryTextColor}"/>
+
+                                                        <ImageButton Grid.Column="1"
+                                                             Source="close_circle_32.png"
+                                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateWorkPageViewModel}}, Path=DeleteHelperCommand}"
+                                                             CommandParameter="{Binding .}"
+                                                             WidthRequest="24"
+                                                             HeightRequest="24"
+                                                             HorizontalOptions="End"
+                                                             VerticalOptions="Center"
+                                                             BackgroundColor="Transparent"/>
+                                                    </Grid>
+                                                </Frame>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+
+                                        <CollectionView.Footer>
+                                            <BoxView HeightRequest="10" Color="Transparent"/>
+                                        </CollectionView.Footer>
+                                    </CollectionView>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <ctr:LabeledEditor  x:Name="PlanEntry" MyLabel="Plan" Text="{Binding Plan, Mode=TwoWay}" Placeholder="Kurzer Text"   />
+
+                            <Grid HorizontalOptions="Center" 
+                              ColumnDefinitions="*,*" 
+                              ColumnSpacing="10"
+                              Margin="20,20,20,20">
+
+                                <ctr:CustomButton Grid.Column="0"
+                                    ButtonText="Einsatz erstellen"
+                                    EnabledColor="{DynamicResource PrimaryButtonBackgroundColor}"
+                                    DisabledColor="{DynamicResource CancelButtonBackgroundColor}"
+                                    ButtonCommand="{Binding CreateWorkCommand}"
+                                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}"
+                                    HorizontalOptions="Fill"/>
+
+                                <ctr:CustomButton Grid.Column="1"
+                                    ButtonText="Alle zurücksetzen"
+                                    EnabledColor="{DynamicResource CancelButtonBackgroundColor}"
+                                    ButtonCommand="{Binding CancelWorkCommand}"
+                                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}"
+                                    HorizontalOptions="Fill"/>
+                            </Grid>
+                        </StackLayout>
+                    </Border.Content>
+                </Border>
+            </ScrollView>
+        </Grid>
+
+        <Grid IsVisible="{Binding LoadingController.IsLoading}"
+              BackgroundColor="White"
+              InputTransparent="False">
+            <Border BackgroundColor="{DynamicResource Surface}"
+                StrokeShape="RoundRectangle 12"
+                WidthRequest="200"
+                HeightRequest="100"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+                <VerticalStackLayout Spacing="0"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center">
+                    <ActivityIndicator IsRunning="True" 
+                         Color="{DynamicResource Primary}"/>
+                    <Label Text="{Binding LoadingController.LoadingMessage}"  TextColor="Black"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
+    
+</ContentPage>

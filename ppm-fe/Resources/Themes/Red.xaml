@@ -15,7 +15,25 @@
     <Color x:Key="SecondaryDarkText">#FF8A80</Color>
     <!-- A soft coral for secondary text -->
     <Color x:Key="Tertiary">#FF6F61</Color>
+    <Color x:Key="Tertiary_2">#EFE2E2</Color>
+    <Color x:Key="Teil_1">#EFE2E2</Color>
+    <Color x:Key="Teil_2">#FFFD8D</Color>
+    
     <!-- A warm, inviting red-orange -->
+
+
+
+    <Color x:Key="SuccessColor">#5CB338</Color>
+    <!-- MediumSeaGreen mit 0.8 Opazität -->
+    <Color x:Key="PendingColor">#ff8fa3</Color>
+    <Color x:Key="InProgressColor">#FF8300</Color>
+    <!-- Crimson -->
+    <Color x:Key="SelectedWorkTextColor">white</Color>
+    <Color x:Key="TransparentColor">Transparent</Color>
+    <Color x:Key="UnselectedWorkTextColor">black</Color>
+
+    <Color x:Key="ApproveColor">#638C6D</Color>
+    <Color x:Key="DissaproveColor">#AA2B1D</Color>
 
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>

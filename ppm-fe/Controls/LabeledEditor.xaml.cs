@@ -11,7 +11,6 @@ public partial class LabeledEditor : ContentView
     public static readonly BindableProperty PlaceholderProperty =
         BindableProperty.Create(nameof(Placeholder), typeof(string), typeof(LabeledEditor), default(string));
 
-
     public string MyLabel
     {
         get => (string)GetValue(MyLabelProperty);

@@ -1,4 +1,3 @@
-
 namespace ppm_fe.Controls;
 
 public partial class LabeledSwitch : ContentView

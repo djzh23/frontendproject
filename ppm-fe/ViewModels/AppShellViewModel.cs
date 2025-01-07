@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ppm_fe.Helpers;
+using ppm_fe.Messages;
 using ppm_fe.Services;
-using ppm_fe.Services.Interfaces;
 using ppm_fe.Views.Startup;
 using Themes = ppm_fe.Resources.Themes;
 
@@ -11,20 +11,17 @@ namespace ppm_fe.ViewModels
     public partial class AppShellViewModel : BaseViewModel
     {
         private readonly IAuthService _authService;
-        private readonly ICacheService _cacheService;
+
+        public AppShellViewModel(IAuthService authService)
+        {
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+            SignOutCommand = new AsyncRelayCommand(SignOutAsync);
+        }
 
         public ImageSource? Icon { get; set; }
         public DataTemplate? ContentTemplate { get; set; }
-        public IAsyncRelayCommand SignOutCommand { get; }
 
-        public AppShellViewModel(IAuthService authService, ICacheService cacheService)
-        {
-            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
-            _cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
-            SignOutCommand = new AsyncRelayCommand(SignOutAsync);
-            // for testing - logout manualy
-            //SignOutCommand.Execute(null);
-        }
+        public IAsyncRelayCommand SignOutCommand { get; }
 
         private async Task SignOutAsync()
         {
@@ -41,17 +38,21 @@ namespace ppm_fe.ViewModels
                 ThemeManager.SetTheme(nameof(Themes.Default));
             }
 
-            _cacheService.ClearCache();
+            // Clear Cache
+            CacheService.ClearCache();
+            _isUserCacheInitialized = false;
 
             Shell.Current.FlyoutIsPresented = false;
             await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
             Shell.Current.FlyoutBehavior = FlyoutBehavior.Disabled;
 
-            // Send the message to clear fields
+            // Send the message to remove User from cache
+            WeakReferenceMessenger.Default.Send(new UserMessage(null));
+
+
             WeakReferenceMessenger.Default.Send(new MessageHelper("clear"));
 
-            // If needed, re-enable the Flyout after navigation
-            Device.BeginInvokeOnMainThread(() =>
+            Application.Current?.Dispatcher.Dispatch(() =>
             {
                 Shell.Current.FlyoutBehavior = FlyoutBehavior.Flyout;
             });

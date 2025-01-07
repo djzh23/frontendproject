@@ -11,6 +11,12 @@ public partial class LabeledDatePicker : ContentView
     public static readonly BindableProperty FontSizeProperty =
         BindableProperty.Create(nameof(FontSize), typeof(double), typeof(LabeledDatePicker), 14.0);
 
+    public static readonly BindableProperty MaximumDateProperty = BindableProperty.Create(
+        nameof(MaximumDate),
+        typeof(DateTime),
+        typeof(LabeledDatePicker),
+        DateTime.MaxValue);
+
     public string MyLabel
     {
         get => (string)GetValue(MyLabelProperty);
@@ -27,6 +33,12 @@ public partial class LabeledDatePicker : ContentView
     {
         get => (double)GetValue(FontSizeProperty);
         set => SetValue(FontSizeProperty, value);
+    }
+
+    public DateTime MaximumDate
+    {
+        get => (DateTime)GetValue(MaximumDateProperty);
+        set => SetValue(MaximumDateProperty, value);
     }
 
     public LabeledDatePicker()

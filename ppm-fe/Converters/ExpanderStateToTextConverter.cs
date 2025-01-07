@@ -4,16 +4,15 @@ namespace ppm_fe.Converters
 {
     public class ExpanderStateToTextConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            bool isExpanded = (bool)value;
+            bool isExpanded = value as bool? ?? false;
 
-            // Check if the parameter is "text" or "background"
-            if (parameter.ToString() == "text")
+            if (parameter?.ToString() == "text")
             {
-                return isExpanded ? "Minimieren \u25B2" : "Öffnen \u25BC";
+                return isExpanded ? "Einsätze ausblenden \u25B2" : "Einsätze öffnen \u25BC";
             }
-            else if (parameter.ToString() == "background")
+            else if (parameter?.ToString() == "background")
             {
                 return isExpanded ? Colors.LightGreen : Colors.LightPink;
             }
@@ -21,7 +20,7 @@ namespace ppm_fe.Converters
             return null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

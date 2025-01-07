@@ -1,5 +1,6 @@
 ﻿namespace ppm_fe.Extensions
 {
+    // Used for changing the color of the Forget Password Link in Ui, used in LoginPage
     public static class ViewExtensions
     {
         public static Task<bool> ColorTo(this VisualElement self, Color fromColor, Color toColor, Action<Color> callback, uint length = 250)

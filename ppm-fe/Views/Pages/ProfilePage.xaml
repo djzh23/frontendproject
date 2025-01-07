@@ -5,6 +5,7 @@
              xmlns:converter="clr-namespace:ppm_fe.Converters"
              xmlns:vm="clr-namespace:ppm_fe.ViewModels.Pages"
              xmlns:ctr="clr-namespace:ppm_fe.Controls"  Shell.NavBarIsVisible="{OnPlatform Android=true, WinUI=false}"
+             Shell.TitleColor="White"
              Title="ProfilePage">
 
     <ContentPage.Resources>
@@ -14,9 +15,13 @@
     </ContentPage.Resources>
 
     <Grid>
-        <!-- Fixed connectivity bar -->
+        <Grid.Background>
+            <DynamicResource Key="GradientBrush" />
+        </Grid.Background>
+
+        <!-- Connectivity bar -->
         <Grid VerticalOptions="Start"
-          ZIndex="1"
+          ZIndex="-1"
           RowDefinitions="Auto"
           BackgroundColor="Red" 
           IsVisible="{Binding IsConnected, Converter={StaticResource InverseBoolConverter}}">
@@ -41,7 +46,7 @@
             <Frame.Content>
                 <VerticalStackLayout  Padding="5">
                     <Label 
-                        Text="Profile Information" 
+                        Text="Profile Informationen" 
                         FontSize="Large" 
                         TextColor="{DynamicResource PrimaryDarkText}"
                         FontAttributes="Bold" 
@@ -55,18 +60,6 @@
                                VerticalOptions="Center" 
                                FontAttributes="Italic"/>
                     </Grid>
-
-                    <ActivityIndicator IsVisible="{Binding  IsRefreshing}" IsRunning="{Binding  IsRefreshing}">
-                        <ActivityIndicator.Style>
-                            <Style TargetType="ActivityIndicator">
-                                <Setter Property="Color" Value="{DynamicResource PrimaryDarkText}" />
-                                <Setter Property="HeightRequest" Value="30" />
-                                <Setter Property="WidthRequest" Value="30" />
-                                <Setter Property="HorizontalOptions" Value="Center" />
-                                <Setter Property="VerticalOptions" Value="Center" />
-                            </Style>
-                        </ActivityIndicator.Style>
-                    </ActivityIndicator>
 
                     <VerticalStackLayout Padding="5" >
                         <ctr:LabeledEntry MyLabel="Vorname" Text="{Binding User.Firstname}" Placeholder="Vorname" FontSize="18"  />
@@ -89,7 +82,7 @@
                                 EnabledColor="{DynamicResource PrimaryButtonBackgroundColor}"
                                 DisabledColor="{DynamicResource CancelButtonBackgroundColor}"
                                 ButtonCommand="{Binding UpdateCommand}"
-                                IsEnabled="{Binding  IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                                IsEnabled="{Binding  IsLoading, Converter={StaticResource InverseBoolConverter}}"
                                 HorizontalOptions="Center"
                                 Margin="0,20,0,20" />
                     </HorizontalStackLayout>
@@ -98,5 +91,23 @@
             </Frame.Content>
         </Frame>
     </ScrollView>
+
+        <Grid IsVisible="{Binding LoadingController.IsLoading}"
+          BackgroundColor="White"
+          InputTransparent="False">
+            <Border BackgroundColor="{DynamicResource Surface}"
+                StrokeShape="RoundRectangle 12"
+                WidthRequest="200"
+                HeightRequest="100"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+                <VerticalStackLayout Spacing="0"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center">
+                    <ActivityIndicator IsRunning="True"  Color="{DynamicResource Primary}"/>
+                    <Label Text="{Binding LoadingController.LoadingMessage}" HorizontalOptions="Center"  TextColor="Black" />
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
     </Grid>
 </ContentPage>

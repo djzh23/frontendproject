@@ -3,18 +3,20 @@ using Newtonsoft.Json;
 
 namespace ppm_fe.Services
 {
+    // Generic wrapper for API responses containing status, message, data, and pagination
     public class ApiResponse<T>
     {
         public bool Success { get; set; }
+
         public string? Message { get; set; }
 
         public T? Data { get; set; }
 
         [JsonProperty("pagination")]
         public PaginationInfo? Pagination { get; set; }
-
     }
 
+    // Contains pagination information for API responses
     public class PaginationInfo
     {
         [JsonProperty("total")]
@@ -51,6 +53,7 @@ namespace ppm_fe.Services
         public string? Path { get; set; }
     }
 
+    // Response model for successful login containing user details, authentication token, and role
     public class LoginResponse
     {
         [JsonProperty("user")]
@@ -62,12 +65,6 @@ namespace ppm_fe.Services
         [JsonProperty("role")]
         public string? RoleText { get; set; }
 
-    }
-
-    public class ForgetPasswordResponse
-    {
-        [JsonProperty("message")]
-        public string? Message { get; set; }
     }
 
     public class UserSummary

@@ -5,13 +5,6 @@
              Shell.NavBarIsVisible="False"
              Title="LoadingPage">
 
-
-
-    <!--<StackLayout>
-        <ActivityIndicator IsRunning="True" HeightRequest="40" WidthRequest="40" HorizontalOptions="Center" VerticalOptions="Center" />
-    </StackLayout>-->
-
-
     <Grid RowDefinitions="*, Auto, *">
         <Image Grid.Row="0" 
                Source="your_logo.png"
@@ -28,7 +21,7 @@
                                HeightRequest="50" 
                                WidthRequest="50"/>
 
-            <Label Text="Loading..."
+            <Label Text="Wird geladen..."
                    FontSize="18"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
@@ -43,5 +36,4 @@
                VerticalOptions="End"
                Margin="0,0,0,20"/> 
     </Grid>
-
 </ContentPage>

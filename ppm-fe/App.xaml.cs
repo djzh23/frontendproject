@@ -1,7 +1,10 @@
-﻿namespace ppm_fe;
-using Microsoft.Maui.Platform;
+﻿using Microsoft.Maui.Platform;
 using ppm_fe.Models;
+using ppm_fe.Services.Interfaces;
+using ppm_fe.ViewModels;
 
+
+namespace ppm_fe;
 public partial class App : Application
 {
     private static User? _userDetails;
@@ -33,14 +36,6 @@ public partial class App : Application
     {
         InitializeComponent();
 
-
-        // Lade das gespeicherte Theme oder setze "Light" als Standard
-        //var theme = Preferences.Get("Theme", "Light");
-        var a = UserDetails;
-        //LoadTheme(theme);
-
-        // Update the SelectedTheme property after logging back in
-
         // Borderless Entry für plattformübergreifende UI
         Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(nameof(Entry), (handler, view) =>
         {
@@ -56,17 +51,15 @@ public partial class App : Application
 
         MainPage = serviceProvider.GetRequiredService<AppShell>();
 
-        // Registrieren für Theme-Änderungsnachrichten
-        //WeakReferenceMessenger.Default.Register<ThemeChangedMessage>(this, (r, m) =>
-        //{
-        //    LoadTheme(m.Value);
-        //});
+        // Initialize BaseViewModel with ICacheService
+        var cacheService = serviceProvider.GetRequiredService<ICacheService>();
+        BaseViewModel.Initialize(cacheService);
     }
 
 
     protected override void OnStart()
     {
-        // Handle when your app starts
+        // Handle when the app starts
         base.OnStart();
         ThemeManager.Initialize();
     }

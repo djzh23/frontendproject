@@ -9,14 +9,18 @@
              Shell.NavBarIsVisible="{OnPlatform Android=true, WinUI=false}"
              Shell.TitleColor="White" >
 
-    <ContentPage.Resources>
+    <ContentPage.Resources> 
         <ResourceDictionary>
             <converter:InverseBoolConverter x:Key="InverseBoolConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <Grid>
-        <!-- Fixed connectivity bar -->
+        <Grid.Background>
+            <DynamicResource Key="GradientBrush" />
+        </Grid.Background>
+
+        <!-- Connectivity bar -->
         <Grid VerticalOptions="Start"
           ZIndex="1"
           RowDefinitions="Auto"
@@ -44,7 +48,6 @@
                     <Label Text="Thema ändern :" 
                            FontSize="Medium" 
                            VerticalOptions="Center" 
-                           FontFamily="InconsolataExpandedRegular" 
                            TextColor="{DynamicResource PrimaryDarkText}"/>
                     <Border Padding="10" StrokeShape="RoundRectangle 50,50,50,50" StrokeThickness="3" StrokeDashOffset="0" BackgroundColor="{DynamicResource FrameOne}"  >
                         <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
@@ -79,508 +82,51 @@
                     <Label HorizontalOptions="Center" Text="{Binding SelectedTheme, StringFormat='Ausgewähltes Theme : \{0\}'}"/>
 
                     <Button
-                        x:Name="CounterBtn"
-                        Text="Klicken Sie mich" 
+                        x:Name="PrimaryBtn"
+                        Text="Primäres Button-Design" 
                         BackgroundColor="{DynamicResource PrimaryButtonBackgroundColor}"
                         TextColor="{DynamicResource PrimaryButtonTextColor}"
                         SemanticProperties.Hint="Counts the number of times you click"
-                        Clicked="OnCounterClicked"
                         HorizontalOptions="Fill" />
 
                     <Button
-                        Text="Klicken Sie mich" 
+                        Text="Sekundäres Button-Design" 
                         BackgroundColor="{DynamicResource SecondaryButtonBackgroundColor}"
                         TextColor="{DynamicResource SecondaryButtonTextColor}"
                         SemanticProperties.Hint="Counts the number of times you click"
-                        Clicked="OnCounterClicked"
                         HorizontalOptions="Fill" />
 
                     <Button
-                        Text="Abbrechen-Button" 
+                        Text="Abbrechen-Button Design" 
                         BackgroundColor="{DynamicResource CancelButtonBackgroundColor}"
                         TextColor="{DynamicResource CancelButtonTextColor}"
                         SemanticProperties.Hint="Counts the number of times you click"
-                        Clicked="OnCounterClicked"
                         HorizontalOptions="Fill" />
 
-                    <Label
-                        Text="Hallo, Welt!"
-                        Style="{StaticResource Headline}"
-                        TextColor="{DynamicResource PrimaryDarkText}"
-                        SemanticProperties.HeadingLevel="Level1" />
+                        <Button
+                            Text="Standing Einsatz" 
+                            BackgroundColor="{DynamicResource PendingColor}"
+                            TextColor="{DynamicResource PrimaryDarkText}"
+                            SemanticProperties.Hint="Counts the number of times you click"
+                            HorizontalOptions="Fill" />
 
-                    <Label
-                        Text="Willkommen bei der &#10;PPM Multi-platform App Für Verein"
-                        Style="{StaticResource SubHeadline}"
-                        TextColor="{DynamicResource PrimaryDarkText}"
-                        SemanticProperties.HeadingLevel="Level2"
-                        SemanticProperties.Description="Welcome to dot net Multi platform App UI" />
+                        <Button
+                            Text="In Progress Einsatz" 
+                            BackgroundColor="{DynamicResource InProgressColor}"
+                            TextColor="{DynamicResource PrimaryDarkText}"
+                            SemanticProperties.Hint="Counts the number of times you click"
+                            HorizontalOptions="Fill" />
 
-                    <StackLayout Spacing="20">
-                        <!-- First Expander -->
-                        <ScrollView x:Name="MainScrollView">
-                            <VerticalStackLayout>
-                                <toolkit:Expander PropertyChanged="OnExpanderPropertyChanged">
-                                    <toolkit:Expander.Header>
-                                        <Grid Padding="10" BackgroundColor="#E0E0E0">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Label Text="Form Reflexion 1" 
-                                                   FontSize="Medium" 
-                                                   FontAttributes="Bold" 
-                                                   TextColor="Black"
-                                                   VerticalOptions="Center"/>
-                                            <Image Grid.Column="1" 
-                                                   Source="right_arrow_icon.png" 
-                                                   HeightRequest="32" 
-                                                   WidthRequest="32"
-                                                   VerticalOptions="Center">
-                                                <Image.Behaviors>
-                                                    <toolkit:IconTintColorBehavior TintColor="Black"/>
-                                                </Image.Behaviors>
-                                            </Image>
-                                        </Grid>
-                                    </toolkit:Expander.Header>
-                                    <toolkit:Expander.Content>
-
-                                        <Frame BackgroundColor="{DynamicResource FrameOne}" 
-                                               Padding="0" 
-                                               HasShadow="True" 
-                                               CornerRadius="10">
-
-                                            <VerticalStackLayout  Padding="5" >
-                                                <Border  Padding="10" Margin="5"
-                                                         Background="{DynamicResource LabeledEntryBackgroundColor}" 
-                                                         StrokeShape="RoundRectangle 10,10,10,10" >
-                                                   
-                                                    <Grid ColumnSpacing="10">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="15*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="75*" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Label Grid.Column="0" 
-                                                               Text="Email" 
-                                                               FontSize="Small" 
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               VerticalOptions="Center" />
-
-                                                        <!--Separator-->
-                                                        <BoxView Grid.Column="1"
-                                                             HeightRequest="30"
-                                                             WidthRequest="1"
-                                                             Color="Gray"
-                                                             VerticalOptions="Fill"
-                                                             Margin="0,5" />
-
-                                                        <Entry Grid.Column="2" 
-                                                               Placeholder="email@example.com" 
-                                                               FontAutoScalingEnabled="True"
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               PlaceholderColor="Grey"
-                                                               VerticalOptions="Center" />
-                                                    </Grid>
-                                                </Border>
-
-                                                <Border  Padding="10" Margin="5" Background="{DynamicResource LabeledEntryBackgroundColor}" StrokeShape="RoundRectangle 10,10,10,10" >
-                                                    <Grid ColumnSpacing="10">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="25*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="75*" /> 
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Label Grid.Column="0" 
-                                                               Text="Password" 
-                                                               FontSize="Small" 
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               VerticalOptions="Center" />
-
-                                                        <!--Separator-->
-                                                        <BoxView Grid.Column="1"
-                                                                 HeightRequest="30"
-                                                                 WidthRequest="1"
-                                                                 Color="Gray"
-                                                                 VerticalOptions="Fill"
-                                                                 Margin="0,5" />
-
-                                                        <Entry Grid.Column="2" 
-                                                               Placeholder="Password"
-                                                               IsPassword="True"
-                                                               FontAutoScalingEnabled="True"
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               PlaceholderColor="Grey"
-                                                               VerticalOptions="Center" />
-                                                    </Grid>
-                                                </Border>
-
-                                                <Border  Padding="10" Margin="5" Background="{DynamicResource LabeledEntryBackgroundColor}" StrokeShape="RoundRectangle 10,10,10,10" >
-                                                    <Grid ColumnSpacing="10">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="25*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="75*" />
-                                                        </Grid.ColumnDefinitions>
+                        <Button
+                            Text="Complete Einsatz" 
+                            BackgroundColor="{DynamicResource SuccessColor}"
+                            TextColor="{DynamicResource PrimaryDarkText}"
+                            SemanticProperties.Hint="Counts the number of times you click"
+                            HorizontalOptions="Fill" />
 
 
-                                                        <Label Grid.Column="0" 
-                                                               Text="Email" 
-                                                               FontSize="Small" 
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               VerticalOptions="Center" />
-
-                                                        <!--Separator-->
-                                                        <BoxView Grid.Column="1"
-                                                                 HeightRequest="30"
-                                                                 WidthRequest="1"
-                                                                 Color="Gray"
-                                                                 VerticalOptions="Fill"
-                                                                 Margin="0,5" />
-
-                                                        <Entry Grid.Column="2" 
-                                                               Placeholder="email@example.com" 
-                                                               FontAutoScalingEnabled="True"
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               PlaceholderColor="Grey"
-                                                               VerticalOptions="Center" />
-                                                    </Grid>
-                                                </Border>
-
-                                                <Border  Padding="10" Margin="5" Background="{DynamicResource LabeledEntryBackgroundColor}" StrokeShape="RoundRectangle 10,10,10,10" >
-                                                    <Grid ColumnSpacing="10">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="25*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="75*" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Label Grid.Column="0" 
-                                                           Text="Password" 
-                                                           FontSize="Small" 
-                                                           TextColor="{DynamicResource PrimaryDarkText}"
-                                                           VerticalOptions="Center" />
-
-                                                        <!--Separator-->
-                                                        <BoxView Grid.Column="1"
-                                                             HeightRequest="30"
-                                                             WidthRequest="1"
-                                                             Color="Gray"
-                                                             VerticalOptions="Fill"
-                                                             Margin="0,5" />
-
-                                                        <Entry Grid.Column="2" 
-                                                           Placeholder="Password"
-                                                           IsPassword="True"
-                                                           FontAutoScalingEnabled="True"
-                                                           TextColor="{DynamicResource PrimaryDarkText}"
-                                                           PlaceholderColor="Grey"
-                                                           VerticalOptions="Center" />
-                                                    </Grid>
-                                                </Border>
-
-                                                <Border  Padding="10" Margin="5" Background="{DynamicResource LabeledEntryBackgroundColor}" StrokeShape="RoundRectangle 10,10,10,10" >
-                                                    <Grid ColumnSpacing="10">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="25*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="75*" />
-                                                        </Grid.ColumnDefinitions>
 
 
-                                                        <Label Grid.Column="0" 
-                                                           Text="Email" 
-                                                           FontSize="Small" 
-                                                           TextColor="{DynamicResource PrimaryDarkText}"
-                                                           VerticalOptions="Center" />
-
-                                                        <!--Separator-->
-                                                        <BoxView Grid.Column="1"
-                                                             HeightRequest="30"
-                                                             WidthRequest="1"
-                                                             Color="Gray"
-                                                             VerticalOptions="Fill"
-                                                             Margin="0,5" />
-
-                                                        <Entry Grid.Column="2" 
-                                                            Placeholder="email@example.com" 
-                                                           FontAutoScalingEnabled="True"
-                                                           TextColor="{DynamicResource PrimaryDarkText}"
-                                                           PlaceholderColor="Grey"
-                                                           VerticalOptions="Center" />
-                                                    </Grid>
-                                                </Border>
-
-                                                <Border  Padding="10" Margin="5" Background="{DynamicResource LabeledEntryBackgroundColor}" StrokeShape="RoundRectangle 10,10,10,10" >
-                                                    <Grid ColumnSpacing="10">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="25*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="75*" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Label Grid.Column="0" 
-                                                           Text="Password" 
-                                                           FontSize="Small" 
-                                                           TextColor="{DynamicResource PrimaryDarkText}"
-                                                           VerticalOptions="Center" />
-
-                                                        <!--Separator-->
-                                                        <BoxView Grid.Column="1"
-                                                             HeightRequest="30"
-                                                             WidthRequest="1"
-                                                             Color="Gray"
-                                                             VerticalOptions="Fill"
-                                                             Margin="0,5" />
-
-                                                        <Entry Grid.Column="2" 
-                                                           Placeholder="Password"
-                                                           TextColor="{DynamicResource PrimaryDarkText}"
-                                                           PlaceholderColor="Grey"
-                                                           VerticalOptions="Center" />
-                                                    </Grid>
-                                                </Border>
-                                            </VerticalStackLayout>
-                                        </Frame>
-                                    </toolkit:Expander.Content>
-                                </toolkit:Expander>
-                            </VerticalStackLayout>
-                        </ScrollView>
-
-                        <!-- Second Expander -->
-                        <toolkit:Expander PropertyChanged="OnExpanderPropertyChanged">
-                            <toolkit:Expander.Header>
-                                <Grid Padding="10" BackgroundColor="#E0E0E0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    
-                                    <Label Text="Form Reflexion 2" 
-                                           FontSize="Medium" 
-                                           FontAttributes="Bold" 
-                                           TextColor="Black"
-                                           VerticalOptions="Center"/>
-                                    
-                                    <Image Grid.Column="1" 
-                                           Source="right_arrow_icon.png" 
-                                           HeightRequest="32" 
-                                           WidthRequest="32"
-                                           VerticalOptions="Center">
-                                        <Image.Behaviors>
-                                            <toolkit:IconTintColorBehavior TintColor="Black"/>
-                                        </Image.Behaviors>
-                                    </Image>
-                                </Grid>
-                            </toolkit:Expander.Header>
-                            
-                            <toolkit:Expander.Content>
-                                <Frame BackgroundColor="Transparent" 
-                                       Padding="0" 
-                                       HasShadow="True" 
-                                       CornerRadius="10">
-                                    <VerticalStackLayout>
-                                        <Frame BackgroundColor="Transparent" 
-                                               Padding="0" 
-                                               HasShadow="True" 
-                                               CornerRadius="10">
-                                            <VerticalStackLayout  Padding="5" >
-                                                <Border  Padding="10" Margin="5" Background="{DynamicResource LabeledEntryBackgroundColor}" StrokeShape="RoundRectangle 10,10,10,10" >
-                                                    <Grid ColumnSpacing="10">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="35*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="65*" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Label Grid.Column="0" 
-                                                               Text="Email" 
-                                                               FontSize="Small" 
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               VerticalOptions="Center" />
-
-                                                        <!--Separator-->
-                                                        <BoxView Grid.Column="1"
-                                                                 HeightRequest="30"
-                                                                 WidthRequest="1"
-                                                                 Color="Gray"
-                                                                 VerticalOptions="Fill"
-                                                                 Margin="0,5" />
-
-                                                        <Entry Grid.Column="2" 
-                                                               Placeholder="email@example.com" 
-                                                               FontAutoScalingEnabled="True"
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               PlaceholderColor="Grey"
-                                                               VerticalOptions="Center" />
-                                                    </Grid>
-                                                </Border>
-
-                                                <Border  Padding="10" Margin="5" Background="{DynamicResource LabeledEntryBackgroundColor}" StrokeShape="RoundRectangle 10,10,10,10" >
-                                                    <Grid ColumnSpacing="10">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="35*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="65*" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Label Grid.Column="0" 
-                                                               Text="Password" 
-                                                               FontSize="Small" 
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               VerticalOptions="Center" />
-
-                                                        <!--Separator-->
-                                                        <BoxView Grid.Column="1"
-                                                                 HeightRequest="30"
-                                                                 WidthRequest="1"
-                                                                 Color="Gray"
-                                                                 VerticalOptions="Fill"
-                                                                 Margin="0,5" />
-
-                                                        <Entry Grid.Column="2" 
-                                                               Placeholder="Password"
-                                                               IsPassword="True"
-                                                               FontAutoScalingEnabled="True"
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               PlaceholderColor="Grey"
-                                                               VerticalOptions="Center" />
-                                                    </Grid>
-                                                </Border>
-
-                                                <Border  Padding="10" Margin="5" Background="{DynamicResource LabeledEntryBackgroundColor}" StrokeShape="RoundRectangle 10,10,10,10" >
-                                                    <Grid ColumnSpacing="10">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="35*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="65*" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Label Grid.Column="0" 
-                                                               Text="Email" 
-                                                               FontSize="Small" 
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               VerticalOptions="Center" />
-
-                                                        <!--Separator-->
-                                                        <BoxView Grid.Column="1"
-                                                                 HeightRequest="30"
-                                                                 WidthRequest="1"
-                                                                 Color="Gray"
-                                                                 VerticalOptions="Fill"
-                                                                 Margin="0,5" />
-
-                                                        <Entry Grid.Column="2" 
-                                                               Placeholder="email@example.com" 
-                                                               FontAutoScalingEnabled="True"
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               PlaceholderColor="Grey"
-                                                               VerticalOptions="Center" />
-                                                    </Grid>
-                                                </Border>
-
-                                                <Border  Padding="10" Margin="5" Background="{DynamicResource LabeledEntryBackgroundColor}" StrokeShape="RoundRectangle 10,10,10,10" >
-                                                    <Grid ColumnSpacing="10">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="35*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="65*" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Label Grid.Column="0" 
-                                                               Text="Password" 
-                                                               FontSize="Small" 
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               VerticalOptions="Center" />
-
-
-                                                        <!--Separator-->
-                                                        <BoxView Grid.Column="1"
-                                                                 HeightRequest="30"
-                                                                 WidthRequest="1"
-                                                                 Color="Gray"
-                                                                 VerticalOptions="Fill"
-                                                                 Margin="0,5" />
-
-                                                        <Entry Grid.Column="2" 
-                                                               Placeholder="Password"
-                                                               IsPassword="True"
-                                                               FontAutoScalingEnabled="True"
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               PlaceholderColor="Grey"
-                                                               VerticalOptions="Center" />
-                                                    </Grid>
-                                                </Border>
-
-                                                <Border  Padding="10" Margin="5" Background="{DynamicResource LabeledEntryBackgroundColor}" StrokeShape="RoundRectangle 10,10,10,10" >
-                                                    <Grid ColumnSpacing="10">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="35*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="65*" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Label Grid.Column="0" 
-                                                               Text="Email" 
-                                                               FontSize="Small" 
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               VerticalOptions="Center" />
-
-                                                        <!--Separator-->
-                                                        <BoxView Grid.Column="1"
-                                                                 HeightRequest="30"
-                                                                 WidthRequest="1"
-                                                                 Color="Gray"
-                                                                 VerticalOptions="Fill"
-                                                                 Margin="0,5" />
-
-                                                        <Entry Grid.Column="2" 
-                                                               Placeholder="email@example.com" 
-                                                               FontAutoScalingEnabled="True"
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               PlaceholderColor="Grey"
-                                                               VerticalOptions="Center" />
-                                                    </Grid>
-                                                </Border>
-
-                                                <Border  Padding="10" Margin="5" Background="{DynamicResource LabeledEntryBackgroundColor}" StrokeShape="RoundRectangle 10,10,10,10" >
-                                                    <Grid ColumnSpacing="10">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="35*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="65*" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Label Grid.Column="0" 
-                                                               Text="Password" 
-                                                               FontSize="Small" 
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               VerticalOptions="Center" />
-
-                                                        <!--Separator-->
-                                                        <BoxView Grid.Column="1"
-                                                                 HeightRequest="30"
-                                                                 WidthRequest="1"
-                                                                 Color="Gray"
-                                                                 VerticalOptions="Fill"
-                                                                 Margin="0,5" />
-
-                                                        <Entry Grid.Column="2" 
-                                                               Placeholder="Password"
-                                                               TextColor="{DynamicResource PrimaryDarkText}"
-                                                               PlaceholderColor="Grey"
-                                                               VerticalOptions="Center" />
-                                                    </Grid>
-                                                </Border>
-                                            </VerticalStackLayout>
-                                        </Frame>
-                                    </VerticalStackLayout>
-                                </Frame>
-                            </toolkit:Expander.Content>
-                        </toolkit:Expander>
-                    </StackLayout>
                 </VerticalStackLayout>
             </Frame.Content>
         </Frame>

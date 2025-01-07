@@ -8,29 +8,22 @@ namespace ppm_fe.Models
         public int Id { get; set; }
 
         [JsonProperty("date")]
-        public string Date { get; set; }
+        public string? Date { get; set; }
 
         [JsonProperty("month")]
-        public string Month { get; set; }
+        public string? Month { get; set; }
 
         [JsonProperty("billing_number")]
         public int BillingNumber { get; set; }
 
         [JsonProperty("billing_details")]
-        public List<BillingDetail> BillingDetails { get; set; }
-
-        [JsonProperty("team")]
-        public string Team { get; set; }
+        public List<BillingDetail> BillingDetails = new List<BillingDetail> { };
 
         [JsonProperty("somme_all")]
         public double SommeAll { get; set; }
 
-
         [JsonProperty("pdf_file")]
-        public string PdfFileBilling { get; set; }
-
-        [JsonProperty("isvorort")]
-        public bool IsVorOrt { get; set; }
+        public string? PdfFileBilling { get; set; }
     }
 
     public class BillingDetail
@@ -43,16 +36,16 @@ namespace ppm_fe.Models
 
     public class BillingsInfoProfile : Billing
     {
-        public string Firstname { get; set; } 
-        public string Lastname { get; set; } 
+        public string? Firstname { get; set; } 
+        public string? Lastname { get; set; } 
 
-        public string UserAddress { get; set; }
-        public string UserPostalCode { get; set; }
+        public string? UserAddress { get; set; }
+        public string? UserPostalCode { get; set; }
 
-        public string Iban { get; set; }
-        public string Bic { get; set; }
-        public string BankName { get; set; }
-        public string Steueridentifikationsnummer { get; set; }
-        public string Role { get; set; }
+        public string? Iban { get; set; }
+        public string? Bic { get; set; }
+        public string? BankName { get; set; }
+        public string? Steueridentifikationsnummer { get; set; }
+        public string? Role { get; set; }
     }
 }

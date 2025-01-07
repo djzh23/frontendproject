@@ -28,11 +28,19 @@
                        Keyboard="{Binding Keyboard, Source={x:Reference this}}"
                        PlaceholderColor="{DynamicResource LabeledEntryPlaceholderColor}" 
                        FontSize="{Binding FontSize, Source={x:Reference this}}"
-                       BackgroundColor="{DynamicResource Tertiary}"
-                       TextColor="{DynamicResource PrimaryDarkText}"
+                                               BackgroundColor="{DynamicResource Gray100}"
+                      
+                        
+                        TextColor="{DynamicResource PrimaryDark}"
+                       
+
+                       
                        VerticalOptions="Center" 
                        IsPassword="{Binding IsPassword, Source={x:Reference this}}"/>
             </Grid>
         </Border.Content>
     </Border>
 </ContentView>
+
+<!--BackgroundColor="{DynamicResource Tertiary}"-->
+                       <!--TextColor="{DynamicResource PrimaryDarkText}"-->

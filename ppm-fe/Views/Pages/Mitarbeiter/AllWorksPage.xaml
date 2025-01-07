@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Views.Page.AllWorksPage"
+             xmlns:vm="clr-namespace:ppm_fe.ViewModels.Pages"
+             xmlns:converter="clr-namespace:ppm_fe.Converters"
+             xmlns:constants="clr-namespace:ppm_fe.Constants"
+             xmlns:ctr="clr-namespace:ppm_fe.Controls"
+             xmlns:bhv="clr-namespace:ppm_fe.Behaviors"
+             Shell.NavBarIsVisible="{OnPlatform Android=true, WinUI=false}"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="Meine Einsätze"
+             Shell.TitleColor="White">
+
+    <ContentPage.Resources>
+        <converter:DateOnlyConverter x:Key="DateOnlyConverter" />
+        <converter:DateTimeStringToTimeSpanConverter x:Key="DateTimeStringToTimeSpanConverter"/>
+        <converter:DateFormatConverter x:Key="DateFormatConverter"/>
+        <converter:IntToStringConverter x:Key="IntToStringConverter"/>
+        <converter:StatusToColorConverter x:Key="StatusToColorConverter"/>
+        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converter:ExpanderStateToTextConverter x:Key="ExpanderStateToTextConverter"/>
+        <converter:WorkUpdateButtonVisibleConverter x:Key="WorkUpdateButtonVisibleConverter"/>
+        <converter:WorkCompletButtonVisibleConverter x:Key="WorkCompletButtonVisibleConverter"/>
+        <converter:BoolToLoadingTextConverter x:Key="BoolToLoadingTextConverter"/>
+        <converter:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <converter:SelectedWorkConverter  x:Key="SelectedWorkConverter"/>
+        <converter:StatusToTextConverter  x:Key="StatusToTextConverter"/>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid>
+            <Label x:Name="LogsLabel" />
+        </Grid>
+        <ScrollView>
+            <Grid Padding="10" RowSpacing="10">
+                <Grid.Background>
+                    <DynamicResource Key="GradientBrush" />
+                </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Internet Status -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Expander Header -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Works Box -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Details -->
+                </Grid.RowDefinitions>
+
+                <!-- Internet Connection Status -->
+                <Grid Grid.Row="0" 
+                      BackgroundColor="Red" 
+                      IsVisible="{Binding IsConnected, Converter={StaticResource InverseBoolConverter}}"
+                      HeightRequest="40">
+                                <Label Text="No Internet Connection" 
+                           TextColor="White" 
+                           FontSize="14" 
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center"/>
+                </Grid>
+
+                <!-- Expander for Works -->
+                <toolkit:Expander Grid.Row="1" Grid.RowSpan="2">
+                    <toolkit:Expander.Header>
+                        <Border Margin="0,0"
+                    Padding="12,8"
+                    BackgroundColor="{Binding Source={RelativeSource AncestorType={x:Type toolkit:Expander}}, 
+                                    Path=IsExpanded, 
+                                    Converter={StaticResource ExpanderStateToTextConverter}, 
+                                    ConverterParameter=background}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8">
+                            <Border.Shadow>
+                                <Shadow Brush="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray900}}"
+                            Offset="0,2"
+                            Radius="4"
+                            Opacity="0.5" />
+                            </Border.Shadow>
+                            <Grid ColumnDefinitions="*, Auto">
+                                <Label Text="{Binding Source={RelativeSource AncestorType={x:Type toolkit:Expander}}, 
+                                Path=IsExpanded, 
+                                Converter={StaticResource ExpanderStateToTextConverter}, 
+                                ConverterParameter=text}"
+                               HorizontalOptions="Center"
+                               TextColor="Black"
+                               HeightRequest="25"
+                               VerticalTextAlignment="Center"
+                               Padding="0,0"
+                               FontAttributes="Bold" />
+                            </Grid>
+                        </Border>
+                    </toolkit:Expander.Header>
+
+                    <!-- Works Box -->
+                    <toolkit:Expander.Content>
+                        <Border Padding="0" Margin="0" HeightRequest="160" StrokeShape="RoundRectangle 10,10,10,10">
+                            <ScrollView Orientation="Horizontal"  VerticalScrollBarVisibility="Never">
+                                <Grid  BackgroundColor="{DynamicResource LabeledEntryBackgroundColor}"  >
+                                    <CollectionView ItemsSource="{Binding Works}">
+                                        <CollectionView.ItemsLayout>
+                                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
+                                        </CollectionView.ItemsLayout>
+
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Frame Margin="15" 
+                                               Padding="0" 
+                                               CornerRadius="10" 
+                                               IsClippedToBounds="True"
+                                               HeightRequest="120"
+                                               HasShadow="True" 
+                                               BackgroundColor="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
+                                               Opacity="0.9">
+                                                    <Frame.GestureRecognizers>
+                                                        <TapGestureRecognizer 
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SelectWorkCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                    </Frame.GestureRecognizers>
+                                                    <Grid>
+                                                        <BoxView Color="{Binding Status, Converter={StaticResource StatusToColorConverter}}"/>
+                                                        <StackLayout Padding="15,15" Spacing="0" Margin="0,0,0,0">
+                                                            <Label Text="{Binding Status, Converter={StaticResource StatusToTextConverter}}" 
+                                                               FontAttributes="Bold" 
+                                                               FontSize="18" 
+                                                               TextTransform="Uppercase">
+                                                                <Label.TextColor>
+                                                                    <MultiBinding Converter="{StaticResource SelectedWorkConverter}">
+                                                                        <Binding Path="." />
+                                                                        <Binding Path="BindingContext.SelectedWork" 
+                                                                            Source="{RelativeSource AncestorType={x:Type ContentPage}}"/>
+                                                                    </MultiBinding>
+                                                                </Label.TextColor>
+                                                            </Label>
+                                                            <Label Text="{Binding Ort}" FontSize="16">
+                                                                <Label.TextColor>
+                                                                    <MultiBinding Converter="{StaticResource SelectedWorkConverter}">
+                                                                        <Binding Path="." />
+                                                                        <Binding Path="BindingContext.SelectedWork" 
+                                                                        Source="{RelativeSource AncestorType={x:Type ContentPage}}"/>
+                                                                    </MultiBinding>
+                                                                </Label.TextColor>
+                                                            </Label>
+                                                            <Label Text="{Binding Date, Converter={StaticResource DateOnlyConverter}}" FontSize="14">
+                                                                <Label.TextColor>
+                                                                    <MultiBinding Converter="{StaticResource SelectedWorkConverter}">
+                                                                        <Binding Path="." />
+                                                                        <Binding Path="BindingContext.SelectedWork" 
+                                                                             Source="{RelativeSource AncestorType={x:Type ContentPage}}"/>
+                                                                    </MultiBinding>
+                                                                </Label.TextColor>
+                                                            </Label>
+                                                            <Label Text="{Binding UpdatedAt, StringFormat='Updated: {0:g}'}" FontSize="12">
+                                                                <Label.TextColor>
+                                                                    <MultiBinding Converter="{StaticResource SelectedWorkConverter}">
+                                                                        <Binding Path="." />
+                                                                        <Binding Path="BindingContext.SelectedWork" 
+                                                                             Source="{RelativeSource AncestorType={x:Type ContentPage}}"/>
+                                                                    </MultiBinding>
+                                                                </Label.TextColor>
+                                                            </Label>
+                                                        </StackLayout>
+                                                    </Grid>
+                                                </Frame>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+
+                                        <!-- Footer Template for Load More Button -->
+                                        <CollectionView.Footer>
+
+                                            <Grid WidthRequest="100" HeightRequest="150" HorizontalOptions="Center" VerticalOptions="Center">
+
+                                                <Border StrokeShape="RoundRectangle 10"
+                                                Stroke="Transparent"
+                                                StrokeThickness="1"
+                                                BackgroundColor="Transparent"
+                                                HeightRequest="140"
+                                                IsVisible="{Binding HasMoreItems}">
+                                                    <Grid>
+                                                        <!-- Button Content -->
+                                                        <VerticalStackLayout Spacing="8" 
+                                                       HorizontalOptions="Center" 
+                                                       VerticalOptions="Center"
+                                                       Margin="10">
+                                                            <!-- Icon -->
+                                                            <Image Source="arrow_down.png" 
+                                                           HeightRequest="24" 
+                                                           WidthRequest="24"
+                                                           IsVisible="{Binding IsLoadingMore, Converter={StaticResource InverseBoolConverter}}">
+                                                                <Image.Behaviors>
+                                                                    <toolkit:IconTintColorBehavior TintColor="Black"/>
+                                                                </Image.Behaviors>
+                                                            </Image>
+
+                                                            <!-- Loading Indicator -->
+                                                            <ActivityIndicator IsRunning="{Binding IsLoadingMore}"
+                                                             IsVisible="{Binding IsLoadingMore}"
+                                                             Color="White"
+                                                             HeightRequest="24"
+                                                             WidthRequest="24"/>
+
+                                                            <!-- Text -->
+                                                            <Label Text="{Binding IsLoadingMore, 
+                                                           Converter={StaticResource BoolToLoadingTextConverter}, 
+                                                           ConverterParameter='Mehr laden|Wird geladen...'}"
+                                                           TextColor="Black"
+                                                           FontSize="14"
+                                                           HorizontalOptions="Center"/>
+
+                                                            <Label TextColor="black"
+                                                       FontSize="12"
+                                                       HorizontalOptions="Center"
+                                                       IsVisible="{Binding TotalItems, Converter={StaticResource IntToBoolConverter}}">
+                                                                <Label.Text>
+                                                                    <MultiBinding StringFormat="{}{0} von {1}">
+                                                                        <Binding Path="Works.Count"/>
+                                                                        <Binding Path="TotalItems"/>
+                                                                    </MultiBinding>
+                                                                </Label.Text>
+                                                            </Label>
+                                                        </VerticalStackLayout>
+
+                                                        <!-- Click Handler -->
+                                                        <Button BackgroundColor="{DynamicResource FrameThree}" 
+                                                            Text="Load More" Command="{Binding LoadMoreCommand}"/>
+                                                    </Grid>
+                                                </Border>
+
+                                                <Border StrokeShape="RoundRectangle 10"
+                                                HeightRequest="120"
+                                                BackgroundColor="{DynamicResource FrameThree}"
+                                                IsVisible="{Binding HasMoreItems, Converter={StaticResource InverseBoolConverter}}">
+                                                    <VerticalStackLayout HorizontalOptions="Center" 
+                                                    VerticalOptions="Center"
+                                                    Spacing="8"
+                                                    >
+                                                        <Label Text="✓" 
+                                                       FontSize="24"
+                                                       TextColor="White"
+                                                       HorizontalOptions="Center"/>
+                                                        <Label Text="Alle Items&#x0a;geladen" 
+                                                       TextColor="White"
+                                                       FontSize="12"
+                                                       HorizontalOptions="Center"
+                                                       HorizontalTextAlignment="Center"/>
+                                                    </VerticalStackLayout>
+                                                </Border>
+                                            </Grid>
+                                        </CollectionView.Footer>
+
+                                        <CollectionView.EmptyView>
+                                            <Grid VerticalOptions="Fill" 
+                                              HorizontalOptions="Fill"
+                                              HeightRequest="160">
+                                                <VerticalStackLayout VerticalOptions="Center" 
+                                                               HorizontalOptions="Center"
+                                                               Spacing="20">
+                                                    <Image Source="no_data.png" 
+                                                       HeightRequest="50"
+                                                       WidthRequest="50"
+                                                       HorizontalOptions="Center">
+                                                        <Image.Behaviors>
+                                                            <toolkit:IconTintColorBehavior TintColor="{DynamicResource PrimaryDarkText}"/>
+                                                        </Image.Behaviors>
+                                                    </Image>
+                                                    <Label Text="Keine Einsätze gefunden" 
+                                                       HorizontalOptions="Center" 
+                                                       TextColor="{DynamicResource PrimaryDarkText}"
+                                                       FontSize="16"/>
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                        </CollectionView.EmptyView>
+                                    </CollectionView>
+                                </Grid>
+                            </ScrollView>
+                        </Border>
+                    </toolkit:Expander.Content>
+                </toolkit:Expander>
+
+                <!-- Details Works with Expander -->
+                <Border Grid.Row="3" 
+                    Padding="0,0,0,0"
+                    Margin="0,30,0,0"
+                    BackgroundColor="{DynamicResource LabeledEntryBackgroundColor}"
+                    StrokeShape="RoundRectangle 10,10,10,10"
+                    StrokeThickness="1"
+                    IsVisible="{Binding IsWorkSelected}">
+
+                    <ScrollView VerticalOptions="FillAndExpand" Grid.Row="1" Margin="2">
+                        <Grid Padding="15" IsVisible="{Binding IsWorkSelected}" Margin="0,0,0,50">
+                            
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <!-- Header -->
+                                <RowDefinition Height="Auto"/>
+                                <!-- Content -->
+                                <RowDefinition Height="Auto"/>
+                                <!-- Footer Buttons -->
+                            </Grid.RowDefinitions>
+
+                            <!-- Header -->
+                            <VerticalStackLayout Spacing="5" Margin="0" >
+                                <Label Text="{Binding SelectedWork.Ort, StringFormat='Tages-Protokol: {0}'}"
+                                       FontSize="24" 
+                                       FontAttributes="Bold"
+                                       TextColor="{DynamicResource PrimaryDarkText}"
+                                       HorizontalOptions="Center"/>
+
+                                <Label Text="{Binding SelectedWork.Date, Converter={StaticResource DateOnlyConverter}}"
+                               FontSize="16" 
+                               TextColor="{DynamicResource PrimaryDarkText}"
+                               HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+
+                            <!-- Content -->
+                            <VerticalStackLayout Grid.Row="1" Spacing="15">
+                                <!-- Part 1 Expander -->
+                                <toolkit:Expander PropertyChanged="OnExpanderPropertyChanged">
+                                    <toolkit:Expander.Header>
+                                        <Border Padding="15,10"
+                                            BackgroundColor="{DynamicResource FrameOne}"
+                                            StrokeShape="RoundRectangle 8">
+                                            <Grid 
+                                                BackgroundColor="{DynamicResource FrameOne}" 
+                                                ColumnDefinitions="Auto,*,Auto" 
+                                                ColumnSpacing="15">
+                                                <Label Grid.Column="1"
+                                                   Text="Planung"
+                                                   FontSize="18" 
+                                                   FontAttributes="Bold"
+                                                   TextColor="{DynamicResource PrimaryDarkText}"
+                                                   VerticalOptions="Center"/>
+
+                                                <Image Grid.Column="2" 
+                                                    Source="right_arrow_icon.png"
+                                                    HeightRequest="32"
+                                                    WidthRequest="32">
+                                                    <Image.Behaviors>
+                                                        <toolkit:IconTintColorBehavior TintColor="Black"/>
+                                                    </Image.Behaviors>
+                                                </Image>
+                                            </Grid>
+                                        </Border>
+                                    </toolkit:Expander.Header>
+
+                                    <toolkit:Expander.Content>
+                                        <Border Margin="0,10"
+                                            Padding="10"
+                                            StrokeShape="RoundRectangle 10"
+                                            BackgroundColor="{DynamicResource Gray100}">
+                                            <VerticalStackLayout Spacing="5">
+                                                
+                                                <ctr:LabeledDatePicker MyLabel="Datum"
+                                                  Date="{Binding SelectedDate, Mode=TwoWay}"
+                                                  FontSize="16"/>
+
+                                                <ctr:LabeledPicker MyLabel="Team:"
+                                              ItemsSource="{Binding Source={x:Static constants:Properties.Teams}}" 
+                                              SelectedItem="{Binding SelectedTeam, Mode=TwoWay}"/>
+
+                                                <!-- Helper Section -->
+                                                <Border Padding="15"
+        BackgroundColor="{DynamicResource FrameThree}"
+        StrokeShape="RoundRectangle 8">
+                                                    <VerticalStackLayout Spacing="5">
+                                                        <!-- Existing Helpers -->
+                                                        <CollectionView ItemsSource="{Binding ListOfHelpers}">
+                                                            <CollectionView.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Grid ColumnDefinitions="*,Auto" 
+                          Padding="0,5">
+                                                                        <ctr:LabeledEntry MyLabel="Helfer"
+                                         Text="{Binding .}"
+                                         FontSizeLabel="14"
+                                         Placeholder="Enter new helper"
+                                         Unfocused="OnHelperEntryUnfocused"/>
+
+                                                                        <Button Grid.Column="1"
+                                                                    Text="Löschen"
+                                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AllWorksPageViewModel}}, Path=RemoveHelperCommand}"
+                                                                    CommandParameter="{Binding .}"
+                                                                    BackgroundColor="{DynamicResource PrimaryButtonBackgroundColor}"
+                                                                    TextColor="{DynamicResource CancelButtonTextColor}"
+                                                                    Margin="10,0,0,0"/>
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </CollectionView.ItemTemplate>
+                                                        </CollectionView>
+
+                                                        <!-- New Helpers -->
+                                                        <StackLayout IsVisible="{Binding IsAddingHelper}">
+                                                            <Entry Text="{Binding NewHelperName}"
+                                                       Placeholder="Helfername eingeben"
+                                                       HorizontalOptions="FillAndExpand"/>
+                                                        </StackLayout>
+
+                                                        <!-- Save new Helper Button -->
+                                                        <Button 
+                                                    Text="{Binding AddHelperButtonText}" 
+                                                    Command="{Binding AddHelperCommand}" 
+                                                    WidthRequest="220"                                                        
+                                                    BackgroundColor="{DynamicResource ButtonBackgroundColor}"
+                                                    TextColor="{DynamicResource ButtonTextColor}"
+                                                    Margin="0,0,0,20"/>
+                                                    </VerticalStackLayout>
+                                                </Border>
+
+                                                <ctr:LabeledEntry MyLabel="Ort" 
+                                             Text="{Binding SelectedWork.Ort}"/>
+
+                                                <ctr:LabeledTimePicker LabelText="Startzeit:"
+                                                  Time="{Binding SelectedWork.StartWork, 
+                                                         Converter={StaticResource DateTimeStringToTimeSpanConverter}, 
+                                                         ConverterParameter={Binding SelectedWork.StartWork}, 
+                                                         Mode=TwoWay}"/>
+
+                                                <ctr:LabeledEditor MyLabel="Plan"
+                                              Text="{Binding SelectedWork.Plan, Mode=TwoWay}"
+                                              Placeholder="Kurzer Text"/>
+                                            </VerticalStackLayout>
+                                        </Border>
+                                    </toolkit:Expander.Content>
+                                </toolkit:Expander>
+
+                                <!-- Part 2 Expander (same Struktur as Part 1) -->
+
+                                <toolkit:Expander PropertyChanged="OnExpanderPropertyChanged" Margin="0,20">
+                                    <toolkit:Expander.Header>
+                                        <Border Padding="15,10"
+                                            BackgroundColor="{DynamicResource Teil_2}"
+                                            StrokeShape="RoundRectangle 8">
+                                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="15">
+                                                <Label Grid.Column="1"
+                                                   Text="Reflektion"
+                                                   FontSize="18" 
+                                                   FontAttributes="Bold"
+                                                   TextColor="Black"
+                                                   VerticalOptions="Center"/>
+
+                                                <Image Grid.Column="2" 
+                                                   Source="right_arrow_icon.png"
+                                                   HeightRequest="32"
+                                                   WidthRequest="32">
+                                                    <Image.Behaviors>
+                                                        <toolkit:IconTintColorBehavior TintColor="Black"/>
+                                                    </Image.Behaviors>
+                                                </Image>
+                                            </Grid>
+                                        </Border>
+                                    </toolkit:Expander.Header>
+
+                                    <toolkit:Expander.Content>
+                                        <Border Margin="0,10"
+                Padding="15"
+                StrokeShape="RoundRectangle 10"
+                BackgroundColor="{DynamicResource Gray100}">
+                                            <ScrollView >
+                                                <VerticalStackLayout Spacing="5" Padding="0,0,0,0">
+                                                    <!-- Reflection Entries -->
+                                                    <ctr:LabeledEditor x:Name="ReflexionEntry" 
+                                     MyLabel="Reflektion"
+                                                                       
+                                     Text="{Binding SelectedWork.Reflection, Mode=TwoWay}"
+                                     Placeholder="Kurzer Text"/>
+
+                                                    <ctr:LabeledEditor x:Name="ParentContactEntry" 
+                                     MyLabel="Elternkontakt"
+                                     Text="{Binding SelectedWork.ParentContact, Mode=TwoWay}"
+                                     Placeholder="Kurzer Text"/>
+
+                                                    <ctr:LabeledEditor x:Name="WellbeingOfChildrenEntry" 
+                                     MyLabel="Kinderswohl"
+                                     Text="{Binding SelectedWork.WellbeingOfChildren, Mode=TwoWay}"
+                                     Placeholder="Kurzer Text"/>
+
+                                                    <ctr:LabeledEntry MyLabel="Defect" 
+                                    Text="{Binding SelectedWork.Defect}"/>
+
+                                                    <ctr:LabeledEditor x:Name="NotesEntry" 
+                                     MyLabel="Notes"
+                                     Text="{Binding SelectedWork.Notes, Mode=TwoWay}"
+                                     Placeholder="Kurzer Text"/>
+
+                                                    <ctr:LabeledEditor x:Name="WishesEntry" 
+                                     MyLabel="Wünsche"
+                                     Text="{Binding SelectedWork.Wishes, Mode=TwoWay}"
+                                     Placeholder="Kurzer Text"/>
+
+                                                    <!-- Kids Data Section -->
+                                                    <Border StrokeShape="RoundRectangle 12"
+                                                    Stroke="{DynamicResource Gray300}"
+                                                    BackgroundColor="{DynamicResource Surface}"
+                                                    Margin="0,10"
+                                                    Padding="2">
+                                                        <Grid RowSpacing="0">
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto"/>
+                                                                <!-- Header -->
+                                                                <RowDefinition Height="Auto"/>
+                                                                <!-- Data -->
+                                                                <RowDefinition Height="Auto"/>
+                                                                <!-- Totals -->
+                                                            </Grid.RowDefinitions>
+
+                                                            <!-- Header Row -->
+                                                            <Grid Grid.Row="0"
+                                                          ColumnDefinitions="2*,1*,1*,1*"
+                                                          BackgroundColor="{DynamicResource Primary}"
+                                                          Padding="5">
+
+                                                                <Border Grid.Column="0"
+                                                                Stroke="{DynamicResource Gray200}"
+                                                                StrokeThickness="1">
+                                                                    <Label Text="Altersgruppe" 
+                                                                   Margin="5"
+                                                                   TextColor="White"
+                                                                   FontAttributes="Bold"
+                                                                   HorizontalOptions="Start"
+                                                                   VerticalOptions="Center"/>
+                                                                </Border>
+
+                                                                <Border Grid.Column="1"
+                                                                Stroke="{DynamicResource Gray200}"
+                                                                StrokeThickness="1">
+                                                                    <Label Text="Jungen"
+                                                                   Margin="5"
+                                                                   TextColor="White"
+                                                                   FontAttributes="Bold"
+                                                                   HorizontalOptions="Center"
+                                                                   VerticalOptions="Center"/>
+                                                                </Border>
+
+                                                                <Border Grid.Column="2"
+                                                                Stroke="{DynamicResource Gray200}"
+                                                                StrokeThickness="1">
+                                                                    <Label Text="Mädchen"
+                                                                   Margin="5"
+                                                                   TextColor="White"
+                                                                   FontAttributes="Bold"
+                                                                   HorizontalOptions="Center"
+                                                                   VerticalOptions="Center"/>
+                                                                </Border>
+
+                                                                <Border Grid.Column="3"
+                                                                Stroke="{DynamicResource Gray200}"
+                                                                StrokeThickness="1">
+                                                                    <Label Text="Total"
+                                                                   Margin="5"
+                                                                   TextColor="White"
+                                                                   FontAttributes="Bold"
+                                                                   HorizontalOptions="Center"
+                                                                   VerticalOptions="Center"/>
+                                                                </Border>
+                                                            </Grid>
+
+                                                            <!-- Data Rows -->
+                                                            <CollectionView Grid.Row="1" ItemsSource="{Binding KidsDataUI}">
+                                                                <CollectionView.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <Grid ColumnDefinitions="2*,1*,1*,1*"
+                                                                      BackgroundColor="{DynamicResource SurfaceVariant}">
+
+                                                                            <!-- Age Group -->
+                                                                            <Border Grid.Column="0"
+                                                                            Stroke="{DynamicResource Gray200}"
+                                                                            StrokeThickness="1"
+                                                                            BackgroundColor="Transparent">
+                                                                                <Label Text="{Binding AgeRange}"
+                                                                               Margin="5"
+                                                                               TextColor="Black"
+                                                                               VerticalOptions="Center"/>
+                                                                            </Border>
+
+                                                                            <!-- Boys -->
+                                                                            <Border Grid.Column="1"
+                                                                            Stroke="{DynamicResource Gray200}"
+                                                                            StrokeThickness="1"
+                                                                            BackgroundColor="White">
+                                                                                <Entry Text="{Binding NumberBoys, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}"
+                                                                               MaxLength="3"
+                                                                               TextChanged="OnNumberEntryTextChanged"
+                                                                               Unfocused="OnNumberEntryUnfocused"
+                                                                               Keyboard="Numeric"
+                                                                               TextColor="Black"
+                                                                               HorizontalTextAlignment="Center"
+                                                                               VerticalTextAlignment="Center">
+                                                                                    <Entry.Behaviors>
+                                                                                        <bhv:NumericValidationBehavior/>
+                                                                                    </Entry.Behaviors>
+                                                                                </Entry>
+                                                                            </Border>
+
+                                                                            <!-- Girls -->
+                                                                            <Border Grid.Column="2"
+                                                                            Stroke="{DynamicResource Gray200}"
+                                                                            StrokeThickness="1"
+                                                                            BackgroundColor="White">
+                                                                                <Entry 
+                                                                            Text="{Binding NumberGirls, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}"
+                                                                            Keyboard="Numeric"
+                                                                            MaxLength="3"
+                                                                            TextChanged="OnNumberEntryTextChanged"
+                                                                            Unfocused="OnNumberEntryUnfocused"
+                                                                            TextColor="Black"
+                                                                            HorizontalTextAlignment="Center"
+                                                                            VerticalTextAlignment="Center">
+                                                                                    <Entry.Behaviors>
+                                                                                        <bhv:NumericValidationBehavior/>
+                                                                                    </Entry.Behaviors>
+                                                                                </Entry>
+                                                                            </Border>
+
+                                                                            <!-- Row Total -->
+                                                                            <Border Grid.Column="3"
+                                                                            Stroke="{DynamicResource Gray200}"
+                                                                            StrokeThickness="1"
+                                                                            BackgroundColor="Transparent">
+                                                                                <Label Text="{Binding RowTotal}"
+                                                                               TextColor="Black"
+                                                                               FontAttributes="Bold"
+                                                                               HorizontalOptions="Center"
+                                                                               VerticalOptions="Center"/>
+                                                                            </Border>
+                                                                        </Grid>
+                                                                    </DataTemplate>
+                                                                </CollectionView.ItemTemplate>
+                                                            </CollectionView>
+
+                                                            <!-- Totals Row -->
+                                                            <Grid Grid.Row="2"
+                                                          ColumnDefinitions="2*,1*,1*,1*"
+                                                          BackgroundColor="{DynamicResource Primary}">
+
+                                                                <Border Grid.Column="0"
+                                                                Stroke="{DynamicResource Gray200}"
+                                                                StrokeThickness="1">
+                                                                    <Label Text="Insgesamt"
+                                                                   Margin="5"
+                                                                   TextColor="White"
+                                                                   FontAttributes="Bold"
+                                                                   VerticalOptions="Center"/>
+                                                                </Border>
+
+                                                                <Border Grid.Column="1"
+                                                                Stroke="{DynamicResource Gray200}"
+                                                                StrokeThickness="1">
+                                                                    <Label Text="{Binding TotalBoys}"
+                                                                   TextColor="White"
+                                                                   FontAttributes="Bold"
+                                                                   HorizontalOptions="Center"
+                                                                   VerticalOptions="Center"/>
+                                                                </Border>
+
+                                                                <Border Grid.Column="2"
+                                                                Stroke="{DynamicResource Gray200}"
+                                                                StrokeThickness="1">
+                                                                    <Label Text="{Binding TotalGirls}"
+                                                                   TextColor="White"
+                                                                   FontAttributes="Bold"
+                                                                   HorizontalOptions="Center"
+                                                                   VerticalOptions="Center"/>
+                                                                </Border>
+
+                                                                <Border Grid.Column="3"
+                                                                Stroke="{DynamicResource Gray200}"
+                                                                StrokeThickness="1">
+                                                                    <Label Text="{Binding TotalKids}"
+                                                                   TextColor="White"
+                                                                   FontAttributes="Bold"
+                                                                   HorizontalOptions="Center"
+                                                                   VerticalOptions="Center"/>
+                                                                </Border>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Border>
+
+                                                    <!-- Calculate Button -->
+                                                    <Button Text="Kinderzahl rechnen"
+                                                    Command="{Binding CalculateCommand}"
+                                                    WidthRequest="170"
+                                                    BackgroundColor="{DynamicResource ButtonBackgroundColor}"
+                                                    TextColor="{DynamicResource PrimaryButtonTextColor}"
+                                                    HorizontalOptions="Center"
+                                                    Margin="0,0,0,20"/>
+
+                                                    <!-- End Time -->
+                                                    <ctr:LabeledTimePicker LabelText="Endzeit:"
+                                                                   Padding="0,0,0,30"
+                                                                  Time="{Binding SelectedWork.EndWork, 
+                                                                         Converter={StaticResource DateTimeStringToTimeSpanConverter}, 
+                                                                         ConverterParameter={Binding SelectedWork.EndWork}, 
+                                                                         Mode=TwoWay}"/>
+                                                </VerticalStackLayout>
+                                            </ScrollView>
+                                        </Border>
+                                    </toolkit:Expander.Content>
+                                </toolkit:Expander>
+
+
+
+                            </VerticalStackLayout>
+                        </Grid>
+                    </ScrollView>
+                </Border>
+                
+                <Grid Grid.Row="4"  >
+
+                    <!-- Footer Buttons -->
+                    <VerticalStackLayout 
+                Spacing="10"
+                Margin="0,15,0,0">
+                        <Button Text="Einsatz aktualisieren und speichern"
+                BackgroundColor="{DynamicResource ButtonBackgroundColor}"
+                TextColor="{DynamicResource ButtonTextColor}"
+                Command="{Binding UpdateWorkCommand}"
+                CommandParameter="{Binding SelectedWork}"
+                IsVisible="{Binding SelectedWork, Converter={StaticResource WorkUpdateButtonVisibleConverter}}"/>
+
+                        <Button Text="Bitte schließen Sie den Einsatzprozess ab"
+                     BackgroundColor="{DynamicResource PrimaryButtonBackgroundColor}"
+                    TextColor="{DynamicResource PrimaryButtonTextColor}"
+                    Command="{Binding CompleteWorkCommand}"
+                    CommandParameter="{Binding SelectedWork}"
+                    IsVisible="{Binding SelectedWork, Converter={StaticResource WorkCompletButtonVisibleConverter}}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Grid>
+        </ScrollView>
+        
+        <!-- Loading Overlay -->
+        <Grid IsVisible="{Binding LoadingController.IsLoading}"
+              BackgroundColor="White"
+              InputTransparent="False">
+            <Border BackgroundColor="{DynamicResource Surface}"
+                    StrokeShape="RoundRectangle 12"
+                    WidthRequest="200"
+                    HeightRequest="100"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <VerticalStackLayout Spacing="0"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center">
+                    <ActivityIndicator IsRunning="True" 
+                                     Color="{DynamicResource Primary}"/>
+                    <Label Text="{Binding LoadingController.LoadingMessage}"  TextColor="Black"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
+    
+</ContentPage>

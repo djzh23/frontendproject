@@ -1,6 +1,7 @@
-﻿using ppm_fe.Models;
+﻿using Newtonsoft.Json;
+using ppm_fe.Helpers;
+using ppm_fe.Models;
 using ppm_fe.Views.Startup;
-using Newtonsoft.Json;
 
 namespace ppm_fe.ViewModels.Startup
 {
@@ -10,6 +11,7 @@ namespace ppm_fe.ViewModels.Startup
         {
             CheckUserLoginDetails();
         }
+
         private async void CheckUserLoginDetails()
         {
             // Retrieve the stored user details as a string

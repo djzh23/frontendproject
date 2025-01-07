@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Views.Page.AllUsersPage"
+             xmlns:vm="clr-namespace:ppm_fe.ViewModels.Pages"
+             xmlns:converter="clr-namespace:ppm_fe.Converters"
+             xmlns:ctr="clr-namespace:ppm_fe.Controls"
+             Shell.NavBarIsVisible="{OnPlatform Android=true, WinUI=false}"
+             Shell.TitleColor="White"
+             Title="Alle Benutzer">
+
+
+    <ContentPage.Resources>
+        <converter:ApproveButtonEnabledConverter x:Key="ApproveButtonEnabledConverter" />
+        <converter:DisapproveButtonEnabledConverter x:Key="DisapproveButtonEnabledConverter" />
+        <converter:ChangeButtonEnabledConverter x:Key="ChangeButtonEnabledConverter" />
+        <converter:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <converter:BoolToTextConverter x:Key="BoolToTextConverter" TrueText="Ja" FalseText="Nein"/>
+        <converter:ApprovedDisapprovedUserColorConverter x:Key="ApprovedDisapprovedUserColorConverter"/>
+        <converter:ApproveDisapproveButtonVisbilityConverter x:Key="ApproveDisapproveButtonVisbilityConverter"/>
+
+        <Style x:Key="CustomButtonStyle" TargetType="Button">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Disabled">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Gray" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid RowDefinitions="Auto,*">
+
+            <Grid.Background>
+                <DynamicResource Key="GradientBrush" />
+            </Grid.Background>
+
+            <!-- Internet Connection Status -->
+            <Grid Grid.Row="0" 
+      BackgroundColor="Red" 
+      IsVisible="{Binding IsConnected, Converter={StaticResource InverseBoolConverter}}">
+                <Label Text="Keine Internetverbindung" 
+           TextColor="White" 
+           FontSize="14" 
+           FontAttributes="Bold"
+           HorizontalOptions="Center" 
+           VerticalOptions="Center" 
+           Padding="0,5"/>
+            </Grid>
+
+            <RefreshView Grid.Row="1"
+             IsRefreshing="{Binding IsLoading}" 
+             Command="{Binding RefreshUsersCommand}"
+             Margin="20,20">
+                <CollectionView ItemsSource="{Binding Users}" Margin="10">
+
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,5"
+                       Padding="15" 
+                       BackgroundColor="{Binding Approved, Converter={StaticResource ApprovedDisapprovedUserColorConverter}}"
+                       HorizontalOptions="Fill"
+                       StrokeShape="RoundRectangle 8" >
+
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" 
+                          ColumnDefinitions="*,*"
+                          RowSpacing="10">
+
+                                    <!-- Name -->
+                                    <Label Grid.Row="0" Grid.Column="0" 
+                               Text="{Binding Firstname}" 
+                               FontAttributes="Bold" 
+                               TextColor="{DynamicResource FrameTwo}" />
+                                    <Label Grid.Row="0" Grid.Column="1" 
+                               Text="{Binding Lastname}" 
+                               FontAttributes="Bold" 
+                               HorizontalOptions="End" 
+                               TextColor="{DynamicResource FrameTwo}" />
+
+                                    <!-- Email -->
+                                    <Label Grid.Row="1" Grid.ColumnSpan="2" 
+                               Text="{Binding Email}" 
+                               TextColor="{DynamicResource FrameTwo}" />
+
+                                    <!-- City -->
+                                    <Label Grid.Row="2" Grid.Column="0" 
+                               Text="{Binding City}" 
+                               TextColor="{DynamicResource FrameTwo}" />
+                                    <Label Grid.Row="2" Grid.Column="1" 
+                               Text="{Binding Country}" 
+                               HorizontalOptions="End" 
+                               TextColor="{DynamicResource FrameTwo}" />
+
+                                    <!-- Approved -->
+                                    <Label Grid.Row="3" Grid.ColumnSpan="2" 
+                               Text="{Binding Approved, Converter={StaticResource BoolToTextConverter}, StringFormat='Aktiviert: {0}'}"
+                               TextColor="{DynamicResource FrameTwo}" />
+
+                                    <Grid Grid.Row="4" 
+                                  Grid.ColumnSpan="2"
+                                  ColumnDefinitions="*,*"
+                                  ColumnSpacing="20">
+
+                                        <!-- Role Picker -->
+                                        <Picker Grid.Column="0"
+                                    Title="Rolle"    
+                                    TitleColor="{DynamicResource FrameTwo}"
+                                    TextColor="{DynamicResource PrimaryDarkText}" 
+                                    BackgroundColor="{DynamicResource Tertiary}"
+                                    SelectedItem="{Binding Role.Name}">
+                                            <Picker.ItemsSource>
+                                                <x:Array Type="{x:Type x:String}">
+                                                    <x:String>IT Administrator</x:String>
+                                                    <x:String>Projekt-Koordinator</x:String>
+                                                    <x:String>Festmitarbeiter</x:String>
+                                                    <x:String>Honorarkraft</x:String>
+                                                    <x:String>Unbekannt</x:String>
+                                                </x:Array>
+                                            </Picker.ItemsSource>
+                                        </Picker>
+
+                                        <!-- Change Button -->
+                                        <Button Grid.Column="1"
+                                    Text="Rolle ändern"
+                                    TextColor="{DynamicResource PrimaryButtonTextColor}"
+                                    BackgroundColor="{DynamicResource PrimaryButtonBackgroundColor}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AllUsersPageViewModel}}, Path=ChangeUserCommand}"
+                                    CommandParameter="{Binding}"
+                                    IsVisible="{Binding Role.Id, Converter={StaticResource ChangeButtonEnabledConverter}}" 
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="End"/>
+                                    </Grid>
+
+
+                                    <!-- Approve Button -->
+                                    <Button Grid.Row="5" 
+                                Grid.ColumnSpan="2"
+                                Text="Aktivieren"
+                                TextColor="{DynamicResource ButtonTextColor}"
+                                BackgroundColor="{DynamicResource PrimaryButtonBackgroundColor}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AllUsersPageViewModel}}, Path=ApproveUserCommand}"
+                                CommandParameter="{Binding}"
+                                IsVisible="{Binding Role.Id, Converter={StaticResource ApproveButtonEnabledConverter}}"
+                                Padding="0,5"
+                                Margin="0,10,5,0"
+                                HorizontalOptions="Fill"/>
+
+                                    <!-- Disapprove Button -->
+                                    <Button Grid.Row="5"
+                                Grid.ColumnSpan="2"
+                                Text="Deaktivieren"
+                                TextColor="{DynamicResource ButtonTextColor}"
+                                BackgroundColor="{DynamicResource SecondaryButtonBackgroundColor}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AllUsersPageViewModel}}, Path=DisapproveUserCommand}"
+                                CommandParameter="{Binding}"
+                                IsVisible="{Binding Role.Id, Converter={StaticResource DisapproveButtonEnabledConverter}}"
+                                Padding="0,5"
+                                Margin="0,10,5,0"
+                                HorizontalOptions="Fill"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                    <CollectionView.EmptyView>
+                        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                            <Label Text="Keine Benutzern gefunden" HorizontalOptions="Center" TextColor="{DynamicResource PrimaryDarkText}" />
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </RefreshView>
+        </Grid>
+
+        <Grid IsVisible="{Binding LoadingController.IsLoading}"
+BackgroundColor="White"
+InputTransparent="False">
+            <Border BackgroundColor="{DynamicResource Surface}"
+      StrokeShape="RoundRectangle 12"
+      WidthRequest="200"
+      HeightRequest="100"
+      HorizontalOptions="Center"
+      VerticalOptions="Center">
+                <VerticalStackLayout Spacing="0"
+                     HorizontalOptions="Center"
+                     VerticalOptions="Center">
+                    <ActivityIndicator IsRunning="True" 
+                       Color="{DynamicResource Primary}"/>
+                    <Label Text="{Binding LoadingController.LoadingMessage}"  TextColor="Black"
+             HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
+    
+</ContentPage>

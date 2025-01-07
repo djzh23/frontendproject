@@ -69,7 +69,7 @@ public partial class CustomButton : ContentView
         this.PropertyChanged += CustomButton_PropertyChanged;
     }
 
-    private void CustomButton_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void CustomButton_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(IsEnabled))
         {

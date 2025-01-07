@@ -7,8 +7,9 @@ namespace ppm_fe.Helpers
     {
         public string? ClassName { get; set; }
         public string? FunctionName { get; set; }
-        public string? ErrorMessage { get; set; }
+        public string? Properties { get; set; }
         public object? Inputs { get; set; }
+        public int? UserId { get; set; }
         public string? StackTrace { get; set; }
         public DateTime Timestamp { get; set; }
     }
@@ -21,8 +22,9 @@ namespace ppm_fe.Helpers
             {
                 ClassName = className,
                 FunctionName = functionName,
-                ErrorMessage = errorMessage,
+                Properties = errorMessage,
                 Inputs = inputs,
+                UserId = App.CurrentUserId,
                 StackTrace = stackTrace,
                 Timestamp = DateTime.UtcNow
             };

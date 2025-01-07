@@ -2,7 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ppm_fe.Controls.LabeledEditor"
-             x:Name="root">
+             x:Name="this">
 
     <Border Padding="15" Margin="5" StrokeShape="RoundRectangle 10,10,10,10">
         <Border.Background>
@@ -17,19 +17,20 @@
 
                 <VerticalStackLayout>
                     <Label Grid.Column="0" 
-                           Text="{Binding MyLabel, Source={x:Reference root}}" 
+                           Text="{Binding MyLabel, Source={x:Reference this}}" 
                            TextColor="{DynamicResource LabeledEntryTextColor}" 
                            FontSize="16" 
                            VerticalOptions="Center" />
 
                     <Editor Grid.Column="1" 
+                            
                             HeightRequest="200"
-                            Text="{Binding Text, Mode=TwoWay, Source={x:Reference root}}" 
-                            Placeholder="{Binding Placeholder, Source={x:Reference root}}" 
+                            Text="{Binding Text, Mode=TwoWay, Source={x:Reference this}}" 
+                            Placeholder="{Binding Placeholder, Source={x:Reference this}}" 
                             FontAttributes="Bold"
                             CharacterSpacing="1"
                             PlaceholderColor="{DynamicResource LabeledEntryPlaceholderColor}" 
-                            BackgroundColor="{DynamicResource Tertiary}"
+                            BackgroundColor="{DynamicResource Tertiary_2}"
                             TextColor="{DynamicResource LabeledEntryTextColor}"
                             VerticalOptions="Center" />
                 </VerticalStackLayout>

@@ -26,9 +26,10 @@
                             HorizontalOptions="End"
                             Date="{Binding Date, Mode=TwoWay, Source={x:Reference this}}" 
                             FontSize="{Binding FontSize, Source={x:Reference this}}"
+                              TextColor="{DynamicResource LabeledEntryTextColor}"
                             BackgroundColor="{DynamicResource Tertiary}"
-                            TextColor="{DynamicResource PrimaryDarkText}"
-                            VerticalOptions="Center" />
+                            VerticalOptions="Center"
+                            MaximumDate="{Binding MaximumDate, Source={x:Reference this}}" />
             </Grid>
         </Border.Content>
     </Border>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ppm_fe.Views.Page.AllAdminWorksPage"
+             xmlns:ctr="clr-namespace:ppm_fe.Controls"
+             xmlns:vm="clr-namespace:ppm_fe.ViewModels.Pages"
+             xmlns:models="clr-namespace:ppm_fe.Models"
+             x:DataType="vm:AllAdminWorksPageViewModel"
+             xmlns:converter="clr-namespace:ppm_fe.Converters"
+             xmlns:constants="clr-namespace:ppm_fe.Constants"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+             Shell.TitleColor="White"
+             Title="Alle Einsätze"
+             Shell.NavBarIsVisible="{OnPlatform Android=true, WinUI=false}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:IntToStringConverter x:Key="IntToStringConverter"/>
+            <converter:InverseBoolConverter x:Key="InverseBoolConverter"/>
+            <converter:DateOnlyConverter x:Key="DateOnlyConverter" />
+            <converter:DateTimeStringToTimeSpanConverter x:Key="DateTimeStringToTimeSpanConverter"/>
+            <!--<converter:DateFormatConverter x:Key="DateFormatConverter"/>-->
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <DynamicResource Key="GradientBrush" />
+        </Grid.Background>
+        
+        <Grid RowDefinitions="Auto,Auto,*">
+
+            <!-- Connection Status Bar -->
+            <Grid BackgroundColor="Red" 
+                      AbsoluteLayout.LayoutBounds="0, 0, 1, Autosize"
+                      AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional"
+                      Grid.Row="0" 
+                      IsVisible="{Binding IsConnected, Converter={StaticResource InverseBoolConverter}}">
+
+                <Label Text="Keine Internetverbindung" 
+                           TextColor="White"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center" 
+                           Padding="0,5"/>
+            </Grid>
+
+            <VerticalStackLayout Grid.Row="1"  >
+                <Grid ColumnDefinitions="*,*" Padding="10">
+                    <ctr:CustomButton 
+                            ButtonText="letzte hinzugefügte Einsätze"
+                            EnabledColor="{DynamicResource SecondaryButtonBackgroundColor}"
+                            ButtonCommand="{Binding GetLastTenWorksCommand}"
+                            HorizontalOptions="Start"/>
+
+                    <Picker Grid.Column="1"
+                             Title="Filter nach Team"
+                             HorizontalOptions="End"
+                             TitleColor="{DynamicResource PrimaryDarkText}"
+                             ItemsSource="{Binding Source={x:Static Member=constants:Properties.Teams}}"
+                             SelectedItem="{Binding SelectedTeam}"
+                             TextColor="{DynamicResource PrimaryDarkText}"
+                             BackgroundColor="{DynamicResource LabeledEntryPlaceholderColor}"
+                             Margin="5,0,0,0"/>
+                </Grid>
+            </VerticalStackLayout>
+
+            <RefreshView Grid.Row="2" IsRefreshing="{Binding IsLoading}" Margin="10,10">
+                <Grid RowDefinitions="*,Auto">
+                    <CollectionView Grid.Row="0" ItemsSource="{Binding Works}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+                        </CollectionView.ItemsLayout>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="10,5" 
+                                Padding="10" 
+                                BackgroundColor="{DynamicResource LabeledEntryBackgroundColor}"
+                                HorizontalOptions="Fill" 
+                                StrokeShape="RoundRectangle 10,10,10,10">
+                                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                                        <StackLayout Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="10">
+                                            <Label Text="{Binding Team}" FontAttributes="Bold" FontSize="18" TextColor="Black" VerticalOptions="Center" />
+                                            <Label Text="{Binding Date, Converter={StaticResource DateOnlyConverter}}" TextColor="#666666" FontSize="14" />
+                                        </StackLayout>
+
+                                        <StackLayout Grid.Row="1" Grid.Column="0" Spacing="5" Margin="0,10,0,0">
+                                            <Label Text="{Binding CreatorName}" FontAttributes="Bold" FontSize="16" TextColor="#007AFF" />
+                                        </StackLayout>
+
+                                        <Button Grid.Row="2" Grid.ColumnSpan="2"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AllAdminWorksPageViewModel}}, Path=DownloadAndOpenPdfCommand}" 
+                                                IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type vm:AllAdminWorksPageViewModel}}, Path=IsLoading, Converter={StaticResource InverseBoolConverter}}"
+                                                CommandParameter="{Binding .}"
+                                                Text="Einsatz Pdf Öffnen"
+                                                BackgroundColor="{DynamicResource PrimaryButtonBackgroundColor}"
+                                                TextColor="White"
+                                                CornerRadius="5"
+                                                Margin="0,15,0,0"
+                                                HeightRequest="40"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                        <CollectionView.EmptyView>
+                            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                                <Label Text="Keine Einsätze gefunden" HorizontalOptions="Center" TextColor="#666666" />
+                            </StackLayout>
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+                    <Grid Grid.Row="1" Margin="5">
+                        <!-- Footer Template für den Load More Button -->
+                        <VerticalStackLayout Spacing="15" 
+        HorizontalOptions="Center" 
+        VerticalOptions="Center">
+                            <ActivityIndicator IsRunning="{Binding IsLoadingMore}"
+            IsVisible="{Binding IsLoadingMore}"
+            HeightRequest="25"
+            WidthRequest="25"
+            Color="Gray"/>
+
+                            <ctr:CustomButton 
+            ButtonText="Mehr laden"
+            EnabledColor="{DynamicResource SecondaryButtonBackgroundColor}"
+            DisabledColor="{DynamicResource CancelButtonBackgroundColor}"
+            ButtonCommand="{Binding LoadMoreCommand}"
+            IsEnabled="{Binding HasMoreItems}"
+            HorizontalOptions="Center"
+            WidthRequest="150"
+            HeightRequest="40"
+            Margin="0,15,0,0" />
+
+                            <!-- Number of remaining Billings -->
+                            <Label TextColor="black"
+           Opacity="0.8"
+           FontSize="12"
+           HorizontalOptions="Center">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}{0} von {1}">
+                                        <Binding Path="Works.Count"/>
+                                        <Binding Path="TotalItems"/>
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Grid>
+            </RefreshView>
+        </Grid>
+        
+        <Grid IsVisible="{Binding LoadingController.IsLoading}"
+          BackgroundColor="White"
+          InputTransparent="False">
+            <Border BackgroundColor="{DynamicResource Surface}"
+                StrokeShape="RoundRectangle 12"
+                WidthRequest="200"
+                HeightRequest="100"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+                <VerticalStackLayout Spacing="0"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center">
+                    <ActivityIndicator IsRunning="True" 
+                                 Color="{DynamicResource Primary}"/>
+                    <Label Text="{Binding LoadingController.LoadingMessage}"  TextColor="Black"
+                       HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

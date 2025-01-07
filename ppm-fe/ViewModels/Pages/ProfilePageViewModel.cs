@@ -1,56 +1,47 @@
-﻿using ppm_fe.Constants;
+﻿using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using ppm_fe.Constants;
 using ppm_fe.Controls;
 using ppm_fe.Helpers;
 using ppm_fe.Models;
 using ppm_fe.Services;
-using System.Windows.Input;
 
 namespace ppm_fe.ViewModels.Pages;
 
-public class ProfilePageViewModel : BaseViewModel
+public partial class ProfilePageViewModel : BaseViewModel
 {
-
     private readonly IAuthService _authService;
-
-    private User? _user;
-    public User? User
-    {
-        get => _user;
-        set
-        {
-            _user = value;
-            OnPropertyChanged();
-        }
-    }
-
-    private bool _isRefreshing;
-    public bool IsRefreshing
-    {
-        get => _isRefreshing;
-        set => SetProperty(ref _isRefreshing, value);
-    }
-
-    public ICommand UpdateCommand { get; }
-    public ICommand RefreshProfileCommand { get; }
+    public LoadingController LoadingController { get; private set; }
 
     public ProfilePageViewModel(IAuthService authService, IConnectivityService connectivityService)
     {
         ConnectivityService = connectivityService;
         _authService = authService;
+        LoadingController = new LoadingController();
 
         RefreshProfileCommand = new Command(async () => await FetchUserData());
         UpdateCommand = new Command(async () => await UpdateUserData());
     }
 
+    #region properties
+    [ObservableProperty]
+    private User? _user;
+    #endregion
+
+    #region commands
+    public ICommand UpdateCommand { get; }
+    public ICommand RefreshProfileCommand { get; }
+    #endregion
+
+    #region tasks
     public async Task FetchUserData()
     {
-        if (IsBusy) return;
-
-        IsBusy = true;
-        IsRefreshing = true;
+        if (IsLoading) return;
 
         try
         {
+            LoadingController.StartLoading("Profile informationen wird geladen...");
+
             var response = await _authService.GetUserProfile();
             if (response.Success)
             {
@@ -82,24 +73,22 @@ public class ProfilePageViewModel : BaseViewModel
         catch (Exception ex)
         {
             LoggerHelper.LogError(GetType().Name, nameof(FetchUserData), ex.Message, null, ex.StackTrace);
-            await DisplayAlertAsync("Fehler", ErrorMessage.UnexpectedError);
+            await DisplayAlertAsync("Fehler", Properties.UnexpectedError);
         }
         finally
         {
-            IsBusy = false;
-            IsRefreshing = false;
+            LoadingController.StopLoading();
         }
     }
 
     private async Task UpdateUserData()
     {
-        if (IsBusy) return;
-
-        IsBusy = true;
-        IsRefreshing = true;
+        if (IsLoading) return;
 
         try
         {
+            LoadingController.StartLoading("Profile informationen wird erstellt...");
+
             if (User != null)
             {
                 var user = new User
@@ -120,7 +109,7 @@ public class ProfilePageViewModel : BaseViewModel
                 };
 
                 // Update user data
-                var response = await _authService.UpdateProfile(user);
+                var response = await _authService.UpdateUserProfile(user);
                 if (response.Success)
                 {
                     await DisplayAlertAsync("Konfirmation", "Das Profil wurde erfolgreich geändert!!");
@@ -139,12 +128,12 @@ public class ProfilePageViewModel : BaseViewModel
         catch (Exception ex)
         {
             LoggerHelper.LogError(GetType().Name, nameof(FetchUserData), ex.Message, User, ex.StackTrace);
-            await DisplayAlertAsync("Fehler", ErrorMessage.UnexpectedError);
+            await DisplayAlertAsync("Fehler", Properties.UnexpectedError);
         }
         finally
         {
-            IsRefreshing = false;
-            IsBusy = false;
+            LoadingController.StopLoading();
         }
     }
+    #endregion
 }

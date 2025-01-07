@@ -36,14 +36,14 @@ namespace ppm_fe
         public static void Initialize()
         {
 
-            var selectedTheme = Preferences.Default.Get<string>(ThemeKey, null);
-            var prevSelectedTheme = Preferences.Default.Get<string>(PreviousThemeKey, null);
+            string? selectedTheme = Preferences.Default.Get<string?>(ThemeKey, null);
+            string? prevSelectedTheme = Preferences.Default.Get<string?>(PreviousThemeKey, null);
             if (PreviousThemeKey != null)
             {
                 Preferences.Default.Set(PreviousThemeKey, prevSelectedTheme);
             }
 
-            if (selectedTheme is null && Application.Current.UserAppTheme == AppTheme.Dark)
+            if (selectedTheme is null && Application.Current != null && Application.Current.UserAppTheme == AppTheme.Dark)
             {
                 selectedTheme = nameof(Themes.Dark);
             }
@@ -93,18 +93,18 @@ namespace ppm_fe
             if (SelectedTheme == themeName)
                 return;
 
-            var mergedDicts = Application.Current.Resources.MergedDictionaries;
+            var mergedDicts = Application.Current?.Resources.MergedDictionaries;
             
             // Remove the current theme
-            var currentTheme = mergedDicts.FirstOrDefault(d => d.Source?.OriginalString.Contains("/Themes/") == true);
+            var currentTheme = mergedDicts?.FirstOrDefault(d => d.Source?.OriginalString.Contains("/Themes/") == true);
             if (currentTheme != null)
-                mergedDicts.Remove(currentTheme);
+                mergedDicts?.Remove(currentTheme);
 
             if(themeName == "")
                 themeName = nameof(Themes.Default);
 
             // Add the new theme
-            mergedDicts.Add(_themesMap[themeName]);
+            mergedDicts?.Add(_themesMap[themeName]);
 
             SelectedTheme = themeName;
             SelectedThemeChanged?.Invoke(null, EventArgs.Empty);

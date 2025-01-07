@@ -10,6 +10,23 @@
     <Color x:Key="SecondaryDarkText">#B0C4DE</Color>
     <Color x:Key="Tertiary">#9C4668</Color>
 
+
+    <Color x:Key="SuccessColor">#5CB338</Color>
+    <!-- MediumSeaGreen mit 0.8 Opazität -->
+    <Color x:Key="PendingColor">#ff8fa3</Color>
+    <Color x:Key="InProgressColor">#FF8300</Color>
+    
+    <Color x:Key="SelectedWorkTextColor">white</Color>
+    <Color x:Key="UnselectedWorkTextColor">black</Color>
+    <!-- FireBrick -->
+    <Color x:Key="TransparentColor">Transparent</Color>
+
+    <Color x:Key="ApproveColor">#638C6D</Color>
+    <Color x:Key="DissaproveColor">#AA2B1D</Color>
+
+    <Color x:Key="Teil_1">#EFE2E2</Color>
+    <Color x:Key="Teil_2">#FFFD8D</Color>
+
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>

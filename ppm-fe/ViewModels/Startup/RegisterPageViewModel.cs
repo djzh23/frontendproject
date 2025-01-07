@@ -10,7 +10,13 @@ public partial class RegisterPageViewModel : BaseViewModel
 {
     private readonly IAuthService _authService;
 
+    public RegisterPageViewModel(IAuthService authService)
+    {
+        _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+        RegisterCommand = new AsyncRelayCommand(Register);
+    }
 
+    #region properties
     [ObservableProperty]
     private bool _isRegistrationEnabled = true;
 
@@ -55,20 +61,16 @@ public partial class RegisterPageViewModel : BaseViewModel
 
     [ObservableProperty]
     private string? _passwordrepeat;
-
-
-    public RegisterPageViewModel(IAuthService authService)
-    {
-        _authService = authService ?? throw new ArgumentNullException(nameof(authService));
-        RegisterCommand = new AsyncRelayCommand(Register);
-    }
+    #endregion
 
     #region Commands
     public IAsyncRelayCommand RegisterCommand { get; }
+    #endregion
 
+    #region tasks
     private async Task Register()
     {
-        IsBusy = true;
+        IsLoading = true;
         IsRegistrationEnabled = false;
 
         if (
@@ -87,7 +89,7 @@ public partial class RegisterPageViewModel : BaseViewModel
             || string.IsNullOrWhiteSpace(Passwordrepeat)
             )
         {
-            IsBusy = false;
+            IsLoading = false;
             await DisplayAlertAsync("Fehler", "Alle Felder sind erforderlich");
 
             return;
@@ -95,7 +97,7 @@ public partial class RegisterPageViewModel : BaseViewModel
 
         if (Password != Passwordrepeat)
         {
-            IsBusy = false;
+            IsLoading = false;
             await DisplayAlertAsync("Fehler", "Passwort und Passwortwiederholung müssen gleich sein");
             return;
         }
@@ -109,24 +111,24 @@ public partial class RegisterPageViewModel : BaseViewModel
             Street = Street,
             Pzl = Plz,
             City = City,
-            Country = Country,  // Corrected from City = Country
+            Country = Country,
             Steueridentifikationsnummer = Steueridentifikationnummer,
             bank_name = Bankname,
             Number = FormatPhoneNumber(),
-            Iban = InputCleaner.CleanIBAN(Iban),
-            Bic = InputCleaner.CleanBIC(Bic),
+            Iban = InputCleaner.CleanIBAN(Iban ?? string.Empty) ?? Iban,
+            Bic = InputCleaner.CleanBIC(Bic ?? string.Empty) ?? Bic,
             Approved = false
         };
 
         var result = await _authService.Register(user);
         if (!result.Success)
         {
-            IsBusy = false;
+            IsLoading = false;
             await DisplayAlertAsync("Fehler", $"{result.Message}");
         }
         else
         {
-            IsBusy = false;
+            IsLoading = false;
             ResetForm();
 
             await DisplayAlertAsync("Registrierung", "Konto erfolgreich erstellt! Willkommen im Board!");
@@ -134,7 +136,9 @@ public partial class RegisterPageViewModel : BaseViewModel
 
         IsRegistrationEnabled = true;
     }
+    #endregion
 
+    #region utils
     private void ResetForm()
     {
         Firstname = null;
@@ -152,8 +156,6 @@ public partial class RegisterPageViewModel : BaseViewModel
         Password = null;
         Passwordrepeat = null;
     }
-    #endregion
-
 
     private string FormatPhoneNumber()
     {
@@ -171,4 +173,5 @@ public partial class RegisterPageViewModel : BaseViewModel
 
         return digitsOnly;
     }
+    #endregion
 }

@@ -1,19 +1,16 @@
-﻿
+﻿using System.Net;
+using System.Net.Http.Headers;
+using System.Text;
+using Newtonsoft.Json;
 using ppm_fe.Constants;
 using ppm_fe.Helpers;
 using ppm_fe.Models;
 using ppm_fe.ViewModels;
-using Newtonsoft.Json;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Text;
 
 namespace ppm_fe.Services;
 
 public class AuthService : BaseViewModel, IAuthService
 {
-    private const string TokenKey = "token";
-    
     public string? _storedToken;
 
     private User? _myUser;
@@ -27,15 +24,15 @@ public class AuthService : BaseViewModel, IAuthService
         }
     }
 
+    // Http client object used to send requests and receive responses based on the URI
     private HttpClient _client = new()
     {
         BaseAddress = new Uri(RouteHelper.BaseUrl),
     };
 
-
-    //REGISTER - SERVICE FUNCTION
     public async Task<ApiResponse<User>> Register(User user)
     {
+        // Prepare the request
         string route = RouteHelper.GetFullUrl("/register");
         var request = new HttpRequestMessage
         {
@@ -44,11 +41,9 @@ public class AuthService : BaseViewModel, IAuthService
             Content = new StringContent(System.Text.Json.JsonSerializer.Serialize(user), Encoding.UTF8, "application/json")
         };
 
-        // Set the Accept header to application/json
-        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
         try
         {
+            // Handle the response
             var response = await _client.SendAsync(request);
             string jsonResponse = await response.Content.ReadAsStringAsync();
             var responseResult = JsonConvert.DeserializeObject<ApiResponse<User>>(jsonResponse);
@@ -61,7 +56,6 @@ public class AuthService : BaseViewModel, IAuthService
                     Message = responseResult?.Message,
                     Data = null
                 };
-                
             }
             if (responseResult != null)
             {
@@ -70,20 +64,17 @@ public class AuthService : BaseViewModel, IAuthService
         }
         catch (Exception ex)
         {
-            // Log the error
             LoggerHelper.LogError(GetType().Name, nameof(Register), ex.Message, new { user }, ex.StackTrace);
         }
 
         return new ApiResponse<User>
         {
             Success = false,
-            Message = ErrorMessage.UnexpectedError,
+            Message = Properties.UnexpectedError,
             Data = null
         };
     }
 
-
-    //LOGIN - SERVICE FUNCTION
     public async Task<ApiResponse<object>> Login(string email, string password)
     {
 
@@ -109,7 +100,7 @@ public class AuthService : BaseViewModel, IAuthService
                     _storedToken = responseResult.Data.Token;
 
                     await SetStoredToken(_storedToken);
-                    await SecureStorage.SetAsync("hasAuth", "true");
+                    await SecureStorage.SetAsync(Properties.HasAuthKey, "true");
                     await SaveUser();
 
                     return new ApiResponse<object>
@@ -143,7 +134,6 @@ public class AuthService : BaseViewModel, IAuthService
         catch (HttpRequestException ex)
         {
             LoggerHelper.LogError(this.GetType().Name, nameof(Login), $"Network error: {ex.Message}", new { email }, ex.StackTrace);
-
         }
         catch (JsonException ex)
         {
@@ -157,66 +147,11 @@ public class AuthService : BaseViewModel, IAuthService
         return new ApiResponse<object>
         {
             Success = false,
-            Message = ErrorMessage.UnexpectedError,
+            Message = Properties.UnexpectedError,
             Data = null
         };
     }
 
-
-    //FORGETPASSWORD - SERVICE FUNCTION
-    public async Task<bool> ForgetPassword(string email)
-    {
-        string route = RouteHelper.GetFullUrl("/forgot-password");
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Post,
-            RequestUri = new Uri($"{route}"),
-            Content = new StringContent(System.Text.Json.JsonSerializer.Serialize(new { email }), Encoding.UTF8, "application/json")
-        };
-      
-        try
-        {
-            var response = await _client.SendAsync(request);
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-            var forgetPasswordResponse = JsonConvert.DeserializeObject<ApiResponse<ForgetPasswordResponse>>(jsonResponse);
-
-            if (forgetPasswordResponse != null)
-            {
-                var message = forgetPasswordResponse.Message ?? "Unexpected error during login.";
-                if (forgetPasswordResponse.Success)
-                {
-                    
-                    await DisplayAlertAsync("Success", message);
-                    return true;
-                }
-                else
-                {
-                    await DisplayAlertAsync("error", message);
-                }
-            }
-            else
-            {
-                await DisplayAlertAsync("error", "Invalid response.");
-            }
-        }
-        catch (HttpRequestException ex)
-        {
-            await DisplayAlertAsync("Error", $"Network error: {ex.Message}");
-        }
-        catch (JsonException ex)
-        {
-            await DisplayAlertAsync("Error", $"Error parsing response: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlertAsync("Error", $"An unexpected error occurred: {ex.Message}");
-        }
-
-        return false;
-    }
-
-
-    //LOGOUT - SERVICE FUNCTION
     public async Task<ApiResponse<object>> Logout()
     {
         var user_data = await SecureStorage.GetAsync("user_data");
@@ -228,8 +163,6 @@ public class AuthService : BaseViewModel, IAuthService
 
         try
         {
-            //-----------------This is needed when desktop not logout successfully ..TO CHECK
-            //Preferences.Clear(); 
             var response = await _client.SendAsync(request);
             var jsonResponse = await response.Content.ReadAsStringAsync();
             var responseResult = JsonConvert.DeserializeObject<ApiResponse<object>>(jsonResponse);
@@ -237,6 +170,8 @@ public class AuthService : BaseViewModel, IAuthService
             if (responseResult != null && responseResult.Success)
             {
                 _storedToken = null;
+
+                // Remove authentication data from the secure storage 
                 await SecureStorage.SetAsync("hasAuth", "false");
                 SecureStorage.Remove("token");
                 SecureStorage.Remove("user_data");
@@ -248,7 +183,7 @@ public class AuthService : BaseViewModel, IAuthService
                 return new ApiResponse<object>
                 {
                     Success = false,
-                    Message = ErrorMessage.UnexpectedError,
+                    Message = Properties.UnexpectedError,
                     Data = null
                 };
             }
@@ -259,13 +194,54 @@ public class AuthService : BaseViewModel, IAuthService
             return new ApiResponse<object>
             {
                 Success = false,
-                Message = ErrorMessage.UnexpectedError,
+                Message = Properties.UnexpectedError,
                 Data = null
             };
         }
     }
 
-    //GET ALL USERS - SERVICE FUNCTION
+    public async Task<ApiResponse<object>> ForgetPassword(string email)
+    {
+        string route = RouteHelper.GetFullUrl("/forgot-password");
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri($"{route}"),
+            Content = new StringContent(System.Text.Json.JsonSerializer.Serialize(new { email }), Encoding.UTF8, "application/json")
+        };
+
+        try
+        {
+            var response = await _client.SendAsync(request);
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ApiResponse<object>>(jsonResponse);
+
+            if (result != null)
+            {
+                return result;
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            LoggerHelper.LogError(GetType().Name, nameof(ForgetPassword), $"Network error: {ex.Message}", new { Email = email }, ex.StackTrace);
+        }
+        catch (JsonException ex)
+        {
+            LoggerHelper.LogError(GetType().Name, nameof(ForgetPassword), $"Error parsing responser: {ex.Message}", new { Email = email }, ex.StackTrace);
+        }
+        catch (Exception ex)
+        {
+            LoggerHelper.LogError(GetType().Name, nameof(ForgetPassword), $"An unexpected error occurred: {ex.Message}", new { Email = email }, ex.StackTrace);
+        }
+
+        return new ApiResponse<object>
+        {
+            Success = false,
+            Message = Properties.UnexpectedError,
+            Data = null
+        }; ;
+    }
+
     public async Task<ApiResponse<List<UserSummary>>> GetAllUsers()
     {
         var user_data = await SecureStorage.GetAsync("user_data");
@@ -306,14 +282,12 @@ public class AuthService : BaseViewModel, IAuthService
         return new ApiResponse<List<UserSummary>>
         {
             Success = false,
-            Message = ErrorMessage.UnexpectedError,
+            Message = Properties.UnexpectedError,
             Data = null
         };
     }
 
-
-    //UPDATE USER ROLE - SERVICE FUNCTION
-    public async Task<ApiResponse<object>> ApproveRole(int userId, int? roleId)
+    public async Task<ApiResponse<object>> ApproveUser(int userId, int? roleId)
     {
         string route = RouteHelper.GetFullUrl($"/approve/{userId}");
         var request = new HttpRequestMessage
@@ -342,39 +316,37 @@ public class AuthService : BaseViewModel, IAuthService
             }
             else
             {
-                LoggerHelper.LogError(GetType().Name, nameof(ApproveRole), $"Failed to update user role. Status code: {response.StatusCode}", new { userId, roleId }, string.Empty);
+                LoggerHelper.LogError(GetType().Name, nameof(ApproveUser), $"Failed to update user role. Status code: {response.StatusCode}", new { userId, roleId }, string.Empty);
                 return new ApiResponse<object>
                 {
                     Success = false,
-                    Message = ErrorMessage.UnexpectedError,
+                    Message = Properties.UnexpectedError,
                     Data = null
                 };
             }
         }
         catch (UnauthorizedAccessException ex)
         {
-            LoggerHelper.LogError(GetType().Name, nameof(ApproveRole), ex.Message, new { userId, roleId }, ex.StackTrace);
+            LoggerHelper.LogError(GetType().Name, nameof(ApproveUser), ex.Message, new { userId, roleId }, ex.StackTrace);
             return new ApiResponse<object>
             {
                 Success = false,
-                Message = ErrorMessage.UnexpectedError,
+                Message = Properties.UnexpectedError,
                 Data = null
             };
         }
         catch (Exception ex)
         {
-            LoggerHelper.LogError(GetType().Name, nameof(ApproveRole), ex.Message, new { userId, roleId }, ex.StackTrace);
+            LoggerHelper.LogError(GetType().Name, nameof(ApproveUser), ex.Message, new { userId, roleId }, ex.StackTrace);
             return new ApiResponse<object>
             {
                 Success = false,
-                Message = ErrorMessage.UnexpectedError,
+                Message = Properties.UnexpectedError,
                 Data = null
             };
         }
     }
 
-
-    //DISAPPROVE USER - SERVICE FUNCTION
     public async Task<ApiResponse<object>> DisapproveUser(int userId)
     {
         string route = RouteHelper.GetFullUrl($"/disapprove/{userId}");
@@ -408,7 +380,7 @@ public class AuthService : BaseViewModel, IAuthService
                 return new ApiResponse<object>
                 {
                     Success = false,
-                    Message = ErrorMessage.UnexpectedError,
+                    Message = Properties.UnexpectedError,
                     Data = null
                 };
             }
@@ -419,7 +391,7 @@ public class AuthService : BaseViewModel, IAuthService
             return new ApiResponse<object>
             {
                 Success = false,
-                Message = ErrorMessage.UnexpectedError,
+                Message = Properties.UnexpectedError,
                 Data = null
             };
         }
@@ -429,13 +401,72 @@ public class AuthService : BaseViewModel, IAuthService
             return new ApiResponse<object>
             {
                 Success = false,
-                Message = ErrorMessage.UnexpectedError,
+                Message = Properties.UnexpectedError,
                 Data = null
             };
         }
     }
 
-    //GET PROFILE USER - SERVICE FUNCTION
+    public async Task<ApiResponse<object>> ChangeUserRole(int userId, int? roleId)
+    {
+        string route = RouteHelper.GetFullUrl($"/changeRole/{userId}");
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Put,
+            RequestUri = new Uri($"{route}"),
+            Content = new StringContent(System.Text.Json.JsonSerializer.Serialize(new { approved = 1, role_id = roleId }), Encoding.UTF8, "application/json")
+        };
+
+        try
+        {
+            string? token = await GetStoredToken();
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new UnauthorizedAccessException("No authentication token found. Please log in.");
+            }
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await _client.SendAsync(request);
+            string jsonResponse = await response.Content.ReadAsStringAsync();
+            var responseResult = JsonConvert.DeserializeObject<ApiResponse<object>>(jsonResponse);
+
+            if (responseResult != null && responseResult.Success)
+            {
+                return responseResult;
+            }
+            else
+            {
+                LoggerHelper.LogError(GetType().Name, nameof(ChangeUserRole), $"Failed to update user role. Status code: {response.StatusCode}", new { userId, roleId }, string.Empty);
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = Properties.UnexpectedError,
+                    Data = null
+                };
+            }
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            LoggerHelper.LogError(GetType().Name, nameof(ApproveUser), ex.Message, new { userId, roleId }, ex.StackTrace);
+            return new ApiResponse<object>
+            {
+                Success = false,
+                Message = Properties.UnexpectedError,
+                Data = null
+            };
+        }
+        catch (Exception ex)
+        {
+            LoggerHelper.LogError(GetType().Name, nameof(ApproveUser), ex.Message, new { userId, roleId }, ex.StackTrace);
+            return new ApiResponse<object>
+            {
+                Success = false,
+                Message = Properties.UnexpectedError,
+                Data = null
+            };
+        }
+    }
+
     public async Task<ApiResponse<User>> GetUserProfile()
     {
         var user_data = await SecureStorage.GetAsync("user_data");
@@ -482,13 +513,12 @@ public class AuthService : BaseViewModel, IAuthService
         return new ApiResponse<User>
         {
             Success = false,
-            Message = ErrorMessage.UnexpectedError,
+            Message = Properties.UnexpectedError,
             Data = null
         };
     }
 
-    //UPDATE USER PROFILE - SERVICE FUNCTION
-    public async Task<ApiResponse<User>> UpdateProfile(User user)
+    public async Task<ApiResponse<User>> UpdateUserProfile(User user)
     {
         string route = RouteHelper.GetFullUrl("/user");
         var request = new HttpRequestMessage
@@ -510,7 +540,7 @@ public class AuthService : BaseViewModel, IAuthService
             }
             if (responseResult != null && !responseResult.Success)
             {
-                LoggerHelper.LogError(GetType().Name, nameof(UpdateProfile), $"Failed to update user profile. Status code: {response.StatusCode}", new { user.Email }, string.Empty);
+                LoggerHelper.LogError(GetType().Name, nameof(UpdateUserProfile), $"Failed to update user profile. Status code: {response.StatusCode}", new { user.Email }, string.Empty);
                 return new ApiResponse<User>
                 {
                     Success = false,
@@ -521,13 +551,13 @@ public class AuthService : BaseViewModel, IAuthService
         }
         catch (Exception ex)
         {
-            LoggerHelper.LogError(GetType().Name, nameof(UpdateProfile), ex.Message, new { user.Email }, ex.StackTrace);
+            LoggerHelper.LogError(GetType().Name, nameof(UpdateUserProfile), ex.Message, new { user.Email }, ex.StackTrace);
         }
 
         return new ApiResponse<User>
         {
             Success = false,
-            Message = ErrorMessage.UnexpectedError,
+            Message = Properties.UnexpectedError,
             Data = null
         };
     }
@@ -536,12 +566,11 @@ public class AuthService : BaseViewModel, IAuthService
     {
         try
         {
-            var token = await SecureStorage.GetAsync(TokenKey);
+            var token = await SecureStorage.GetAsync(Properties.TokenKey);
             return token;
         }
         catch (Exception ex)
         {
-            // Log the error
             LoggerHelper.LogError(GetType().Name, nameof(SetStoredToken), ex.Message, new { this.MyUser }, ex.StackTrace);
         }
 
@@ -552,11 +581,10 @@ public class AuthService : BaseViewModel, IAuthService
     {
         try
         {
-            await SecureStorage.SetAsync(TokenKey, token);
+            await SecureStorage.SetAsync(Properties.TokenKey, token);
         }
         catch (Exception ex)
         {
-            // Log the error
             LoggerHelper.LogError(GetType().Name, nameof(SetStoredToken), ex.Message, new { this.MyUser }, ex.StackTrace);
         }
     }
@@ -566,7 +594,7 @@ public class AuthService : BaseViewModel, IAuthService
         try
         {
             var userDataJson = JsonConvert.SerializeObject(_myUser);
-            await SecureStorage.SetAsync("user_data", userDataJson);
+            await SecureStorage.SetAsync(Properties.UserDataKey, userDataJson);
         }
         catch (Exception ex)
         {
@@ -576,8 +604,7 @@ public class AuthService : BaseViewModel, IAuthService
 
     public User GetLoggedIntUser()
     {
-        var t = Preferences.Get("token", string.Empty);
-        _storedToken = t;
+        _storedToken = Preferences.Get(Properties.TokenKey, string.Empty);
 
         if (_myUser != null && _storedToken != null)
         {

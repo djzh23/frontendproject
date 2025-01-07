@@ -4,7 +4,6 @@ namespace ppm_fe.Controls;
 
 public partial class LabeledTimePicker : ContentView
 {
-   
     public static readonly BindableProperty TimeProperty =
         BindableProperty.Create(nameof(Time), typeof(TimeSpan), typeof(LabeledTimePicker), default(TimeSpan), BindingMode.TwoWay, propertyChanged: OnTimePropertyChanged);
 

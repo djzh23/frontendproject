@@ -5,8 +5,6 @@ namespace ppm_fe.Controls
     public class LoadingController : INotifyPropertyChanged
     {
         private bool _isLoading;
-        private string? _loadingMessage;
-
         public bool IsLoading
         {
             get => _isLoading;
@@ -17,6 +15,7 @@ namespace ppm_fe.Controls
             }
         }
 
+        private string? _loadingMessage;
         public string? LoadingMessage
         {
             get => _loadingMessage;
@@ -27,20 +26,26 @@ namespace ppm_fe.Controls
             }
         }
 
-        public void StartLoading(string message = "Loading...")
+        public void StartLoading(string message = "Wird geladen...")
         {
-            IsLoading = true;
-            LoadingMessage = message;
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                IsLoading = true;
+                LoadingMessage = message;
+            });
         }
 
         public void StopLoading()
         {
-            IsLoading = false;
-            LoadingMessage = string.Empty;
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                IsLoading = false;
+                LoadingMessage = string.Empty;
+            });
         }
 
         // INotifyPropertyChanged Implementation
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

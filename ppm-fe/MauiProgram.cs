@@ -4,11 +4,12 @@ using Microsoft.Extensions.Logging;
 using ppm_fe.Services;
 using ppm_fe.Services.Interfaces;
 using ppm_fe.ViewModels;
-using ppm_fe.ViewModels.Dashboards;
+using ppm_fe.ViewModels.HomePages;
 using ppm_fe.ViewModels.Pages;
 using ppm_fe.ViewModels.Startup;
-using ppm_fe.Views.Dashboards;
+using ppm_fe.Views.HomePages;
 using ppm_fe.Views.Page;
+using ppm_fe.Views.Pages;
 using ppm_fe.Views.Startup;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using UraniumUI;
@@ -53,17 +54,20 @@ namespace ppm_fe
             builder.Services.AddSingleton<LoginPage>();
             builder.Services.AddSingleton<RegisterPage>();
             builder.Services.AddSingleton<LoadingPage>();
-            builder.Services.AddSingleton<SuperAdminDashboardPage>();
+            builder.Services.AddSingleton<SuperAdminHomePage>();
             builder.Services.AddSingleton<AllUsersPage>();
             builder.Services.AddSingleton<BillingPage>();
+            builder.Services.AddSingleton<AllAdminBillingPage>();
             builder.Services.AddSingleton<ProfilePage>();
             builder.Services.AddSingleton<SettingPage>();
 
-            builder.Services.AddSingleton<AdminDashboardPage>();
+            builder.Services.AddSingleton<AdminHomePage>();
             builder.Services.AddSingleton<CreateWorkPage>();
             builder.Services.AddSingleton<AllWorksPage>();
-            builder.Services.AddSingleton<AllUsersWorksPage>();
+            builder.Services.AddSingleton<AllAdminWorksPage>();
             builder.Services.AddSingleton<StatisticsPage>();
+            builder.Services.AddSingleton<HonorarHomePage>();
+            builder.Services.AddSingleton<FestHomePage>();
 
 
             //View Models
@@ -72,17 +76,20 @@ namespace ppm_fe
             builder.Services.AddSingleton<LoginPageViewModel>();
             builder.Services.AddSingleton<RegisterPageViewModel>();
             builder.Services.AddSingleton<LoadingPageViewModel>();
-            builder.Services.AddSingleton<SuperAdminDashboardPageViewModel>();
+            builder.Services.AddSingleton<SuperAdminHomePageViewModel>();
             builder.Services.AddSingleton<AllUsersPageViewModel>();
             builder.Services.AddSingleton<BillingPageViewModel>();
+            builder.Services.AddSingleton<AllAdminBillingPageViewModel>();
             builder.Services.AddSingleton<ProfilePageViewModel>();
             builder.Services.AddSingleton<SettingsPageViewModel>();
 
-            builder.Services.AddSingleton<AdminDashboardPageViewModel>();
+            builder.Services.AddSingleton<AdminHomePageViewModel>();
             builder.Services.AddSingleton<CreateWorkPageViewModel>();
             builder.Services.AddSingleton<AllWorksPageViewModel>();
-            builder.Services.AddSingleton<AllUsersWorksPageViewModel>();
+            builder.Services.AddSingleton<AllAdminWorksPageViewModel>();
             builder.Services.AddSingleton<StatisticsPageViewModel>();
+            builder.Services.AddSingleton<HonorarHomePageViewModel>();
+            builder.Services.AddSingleton<FestHomePageViewModel>();
 
             // Register AppShell
             builder.Services.AddTransient<AppShell>();

@@ -1,19 +1,30 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using ppm_fe.Messages;
 using ppm_fe.Services;
-using System.Diagnostics;
+using ppm_fe.Services.Interfaces;
 
 namespace ppm_fe.ViewModels
 {
     public partial class BaseViewModel : ObservableObject
     {
+        protected static bool _isUserCacheInitialized;
+        private static readonly object _lock = new();
+
+        // Static constructor to run once for all instances
+        static BaseViewModel()
+        {
+        }
+
+        #region properties
         [ObservableProperty]
-        protected bool _isBusy;
+        protected bool _isConnected;
 
         [ObservableProperty]
-        private string? _title;
+        protected bool _isLoading;
 
-        private IConnectivityService _connectivityService;
-        protected IConnectivityService ConnectivityService
+        private IConnectivityService? _connectivityService;
+        protected IConnectivityService? ConnectivityService
         {
             get => _connectivityService;
             set
@@ -34,40 +45,54 @@ namespace ppm_fe.ViewModels
             }
         }
 
-        private bool _isConnected;
-        public bool IsConnected
+        private static ICacheService? _cacheService;
+        protected static ICacheService CacheService
         {
-            get => _isConnected;
-            set
+            get
             {
-                if (_isConnected != value)
+                EnsureInitialized();
+                return _cacheService!;
+            }
+        }
+        #endregion
+
+        #region tasks
+        private static void EnsureInitialized()
+        {
+            if (!_isUserCacheInitialized)
+            {
+                lock (_lock)
                 {
-                    _isConnected = value;
-                    OnPropertyChanged();
+                    if (!_isUserCacheInitialized)
+                    {
+                        if (_cacheService != null && App.UserDetails != null)
+                        {
+                            // Send the message to add User to cache
+                            WeakReferenceMessenger.Default.Send(new UserMessage(App.UserDetails));
+                        }
+                        _isUserCacheInitialized = true;
+                    }
                 }
             }
         }
 
-        private bool _isLoading;
-        public bool IsLoading
+        public static void Initialize(ICacheService cacheService)
         {
-            get => _isLoading;
-            set
+            if (cacheService == null)
+                throw new ArgumentNullException(nameof(cacheService));
+
+            lock (_lock)
             {
-                if (_isLoading != value)
+                _cacheService = cacheService;
+                if (App.UserDetails != null)
                 {
-                    _isLoading = value;
-                    OnPropertyChanged();
+                    // Send the message to add User to cache
+                    WeakReferenceMessenger.Default.Send(new UserMessage(App.UserDetails));
                 }
             }
         }
 
-        public BaseViewModel()
-        {
-            // Empty constructor
-        }
-
-        private void OnConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+        private void OnConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
         {
             IsConnected = e.NetworkAccess == NetworkAccess.Internet;
             HandleConnectivityChanged();
@@ -78,7 +103,8 @@ namespace ppm_fe.ViewModels
             // Override in derived view models to handle connectivity changes
         }
 
-        static protected async Task DisplayAlertAsync(string title, string message)
+
+        protected static async Task DisplayAlertAsync(string title, string? message)
         {
             // Get the current window (assuming a single-window app for now)
             var windows = Application.Current?.Windows;
@@ -86,13 +112,29 @@ namespace ppm_fe.ViewModels
 
             if (currentWindow?.Page != null)
             {
-                await currentWindow.Page.DisplayAlert(title, message, "OK");
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await currentWindow.Page.DisplayAlert(title, message, "OK");
+                });
+            }
+        }
+
+        protected static async Task<bool> DisplayAlertWithActionAsync(string title, string? message)
+        {
+            // Get the current window (assuming a single-window app for now)
+            var windows = Application.Current?.Windows;
+            var currentWindow = windows != null && windows.Count > 0 ? windows[0] : null;
+
+            if (currentWindow?.Page != null)
+            {
+                return await currentWindow.Page.DisplayAlert(title, message, "Weiter", "Abbrechen");
             }
             else
             {
                 // Handle the case where there's no current window or page
-                Debug.WriteLine("No current window or page found. Cannot display alert.");
+                return false;
             }
         }
+        #endregion
     }
 }

@@ -88,12 +88,12 @@ public partial class EditableLabel : ContentView
         }
     }
 
-    private void OnEntryCompleted(object sender, EventArgs e)
+    private void OnEntryCompleted(object? sender, EventArgs e)
     {
         FinishEditing();
     }
 
-    private void OnEntryUnfocused(object sender, FocusEventArgs e)
+    private void OnEntryUnfocused(object? sender, FocusEventArgs e)
     {
         FinishEditing();
     }

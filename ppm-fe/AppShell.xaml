@@ -4,18 +4,18 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:ppm_fe"
-    xmlns:dashboardPages="clr-namespace:ppm_fe.Views.Dashboards"
+    xmlns:dashboardPages="clr-namespace:ppm_fe.Views.HomePages"
     xmlns:models="clr-namespace:ppm_fe.Models"
     Shell.TabBarIsVisible="False"
     xmlns:startupPages="clr-namespace:ppm_fe.Views.Startup"
     FlyoutBackground="{DynamicResource GradientBrush}"
     Shell.FlyoutBehavior="Flyout"
+    BackgroundColor="{DynamicResource Primary}"
     FlyoutBackdrop="Gray"
     FlyoutIcon="hamburger_menu_icon.png"
     Shell.ForegroundColor="{DynamicResource Tertiary}"
     Shell.TitleColor="{DynamicResource PrimaryDarkText}"
     Title="ppm_fe">
-
 
     <Shell.ItemTemplate >
         <DataTemplate>
@@ -55,17 +55,14 @@
 
     <Shell.FlyoutFooter>
         <StackLayout Padding="20" HeightRequest="150">
-            <Button  BackgroundColor="{DynamicResource ButtonBackgroundColor }"
-                     TextColor="{DynamicResource ButtonTextColor}"
+            <Button  BackgroundColor="{DynamicResource PrimaryButtonBackgroundColor }"
+                     TextColor="{DynamicResource PrimaryButtonTextColor}"
                      Text="Sign Out"
                      Command="{Binding SignOutCommand}" />
 
             <Image Source="logo.png" HeightRequest="0" WidthRequest="100" HorizontalOptions="Center" />
             <Label Text="PPM Für Verein" TextColor="{DynamicResource TextColor}" HorizontalOptions="Center" />
             <Label Text="Version 1.0"  TextColor="{DynamicResource TextColor}" HorizontalOptions="Center" />
-            <Label Text="© 2024" TextColor="{DynamicResource TextColor}" HorizontalOptions="Center" />
-            <Label Text="Powered by - LePrasson" TextColor="{DynamicResource TextColor}" HorizontalOptions="Center" />
-            <Image Source="logo.png" HeightRequest="100" WidthRequest="100" HorizontalOptions="Center" />
 
         </StackLayout>
     </Shell.FlyoutFooter>

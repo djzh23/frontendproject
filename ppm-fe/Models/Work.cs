@@ -21,15 +21,15 @@ namespace ppm_fe.Models
 
 
         [JsonProperty("date")]
-        public string Date { get; set; }
+        public string? Date { get; set; }
 
 
         [JsonProperty("team")]
-        public string Team { get; set; }
+        public string? Team { get; set; }
 
 
         [JsonProperty("ort")]
-        public string Ort { get; set; }
+        public string? Ort { get; set; }
 
 
         [JsonProperty("vorort")]
@@ -41,11 +41,11 @@ namespace ppm_fe.Models
 
 
         [JsonProperty("plan")]
-        public string Plan { get; set; }
+        public string? Plan { get; set; }
 
 
         [JsonProperty("start_work")]
-        public string StartWork { get; set; }
+        public string? StartWork { get; set; }
 
 
         [JsonProperty("id")]
@@ -89,12 +89,12 @@ namespace ppm_fe.Models
 
 
         [JsonProperty("pdf_file")]
-        public string PdfFile { get; set; }
+        public string? PdfFile { get; set; }
 
 
-        public Work(DateTime date, string status, string team, string ort, bool vorort, string plan, TimeSpan startWork, List<string> listofhelpers)
+        public Work(DateTime date, string? status, string? team, string? ort, bool vorort, string? plan, TimeSpan startWork, List<string> listofhelpers)
         {
-            Date = date.ToString("yyyy-MM-dd");  // Ensure this matches the expected format
+            Date = date.ToString("yyyy-MM-dd");  // Convert date to the expected format
             Status = status;
             Team = team;
             Ort = ort;
@@ -115,7 +115,7 @@ namespace ppm_fe.Models
 
 
         [JsonProperty("age_range")]
-        public string AgeRange { get; set; }
+        public string? AgeRange { get; set; }
 
 
         [JsonProperty("age_group_id")]

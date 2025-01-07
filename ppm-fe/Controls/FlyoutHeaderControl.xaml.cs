@@ -5,11 +5,19 @@ namespace ppm_fe.Controls;
 public partial class FlyoutHeaderControl : StackLayout
 {
 
-    string roleText = string.Empty; // Default value because mapping fails
-                                    //private string _fullname = {App.UserDetails.Firstname} ++ {App.UserDetails.Lastname};
+    string roleText = string.Empty; 
     public FlyoutHeaderControl()
     {
         InitializeComponent();
+
+        if (App.UserDetails == null)
+        {
+            // In the case when UserDetails is null
+            lblUserName.Text = "Unknown User";
+            lblUserEmail.Text = "No email";
+            lblUserRole.Text = "No role";
+            return;
+        }
 
         BindingContext = App.UserDetails;
 
@@ -33,8 +41,7 @@ public partial class FlyoutHeaderControl : StackLayout
         if (App.UserDetails != null)
         {
             lblUserName.Text = App.UserDetails.Firstname;
-            //lblUserEmail.Text = App.UserDetails.Email;
-            lblUserEmail.Text = MaskEmail(App.UserDetails.Email);
+            lblUserEmail.Text = MaskEmail(App.UserDetails.Email ?? string.Empty);
             lblUserRole.Text = roleText;
             App.UserDetails.Approved = App.UserDetails.Approved;
         }

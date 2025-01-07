@@ -16,11 +16,11 @@
             base.OnDetachingFrom(entry);
         }
 
-        private void OnEntryTextChanged(object sender, TextChangedEventArgs args)
+        private void OnEntryTextChanged(object? sender, TextChangedEventArgs args)
         {
             if (sender is Entry entry)
             {
-                // Entferne nicht-numerische Zeichen
+                
                 if (!string.IsNullOrEmpty(args.NewTextValue))
                 {
                     if (args.NewTextValue.StartsWith("0") && args.NewTextValue.Length > 1)
@@ -36,7 +36,7 @@
                 }
             }
         }
-        private void OnEntryUnfocused(object sender, FocusEventArgs e)
+        private void OnEntryUnfocused(object? sender, FocusEventArgs e)
         {
             if (sender is Entry entry)
             {

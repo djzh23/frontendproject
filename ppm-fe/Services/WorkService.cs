@@ -1,11 +1,10 @@
-﻿using iText.Kernel.Pdf;
+﻿using System.Diagnostics;
+using System.Net.Http.Headers;
+using System.Text;
+using Newtonsoft.Json;
 using ppm_fe.Constants;
 using ppm_fe.Helpers;
 using ppm_fe.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.Net.Http.Headers;
-using System.Text;
 
 namespace ppm_fe.Services
 {
@@ -18,7 +17,6 @@ namespace ppm_fe.Services
 
         public async Task<ApiResponse<int>> GetNumberOfWorks()
         {
-            //string route = RouteHelper.GetFullUrl("/countworkscreated");
             string route = RouteHelper.GetFullUrl("/works/count/created");
             var request = new HttpRequestMessage
             {
@@ -42,12 +40,12 @@ namespace ppm_fe.Services
                 }
                 else
                 {
-                    LoggerHelper.LogError(this.GetType().Name, nameof(GetNumberOfWorks), $"API request failed: {response.StatusCode}", new { UserId = App.UserDetails.Id }, null);
+                    LoggerHelper.LogError(this.GetType().Name, nameof(GetNumberOfWorks), $"API request failed: {response.StatusCode}", new {}, null);
                 }
             }
             catch (Exception ex)
             {
-                LoggerHelper.LogError(this.GetType().Name, nameof(GetNumberOfWorks), $"An error occurred: {ex.Message}", new { UserId = App.UserDetails.Id }, ex.StackTrace);
+                LoggerHelper.LogError(this.GetType().Name, nameof(GetNumberOfWorks), $"An error occurred: {ex.Message}", new {}, ex.StackTrace);
             }
 
             return new ApiResponse<int>
@@ -57,9 +55,9 @@ namespace ppm_fe.Services
             };
         }
 
-        public async Task<ApiResponse<int>> GetNumberOfStandingWorks()
+        public async Task<ApiResponse<int>> GetNumberOfIncompleteWorks()
         {
-            string route = RouteHelper.GetFullUrl("/works/count/standing");
+            string route = RouteHelper.GetFullUrl("/works/count/incomplete");
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
@@ -82,12 +80,12 @@ namespace ppm_fe.Services
                 }
                 else
                 {
-                    LoggerHelper.LogError(this.GetType().Name, nameof(GetNumberOfWorks), $"API request failed: {response.StatusCode}", new { UserId = App.UserDetails.Id }, null);
+                    LoggerHelper.LogError(this.GetType().Name, nameof(GetNumberOfWorks), $"API request failed: {response.StatusCode}", new { }, null);
                 }
             }
             catch (Exception ex)
             {
-                LoggerHelper.LogError(this.GetType().Name, nameof(GetNumberOfWorks), $"An error occurred: {ex.Message}", new { UserId = App.UserDetails.Id }, ex.StackTrace);
+                LoggerHelper.LogError(this.GetType().Name, nameof(GetNumberOfWorks), $"An error occurred: {ex.Message}", new { }, ex.StackTrace);
             }
 
             return new ApiResponse<int>
@@ -100,7 +98,6 @@ namespace ppm_fe.Services
         public async Task<ApiResponse<Work>> CreateWorkWithoutAgeGroups(Work work)
         {
             string route = RouteHelper.GetFullUrl("/work");
-            //string route = RouteHelper.GetFullUrl("/creatework");
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
@@ -117,7 +114,7 @@ namespace ppm_fe.Services
                 string jsonResponse = await response.Content.ReadAsStringAsync();
                 var responseResult = JsonConvert.DeserializeObject<ApiResponse<Work>>(jsonResponse);
 
-                if (responseResult != null && responseResult.Success)
+                if (responseResult != null)
                 {
                     return responseResult;
                 }
@@ -131,7 +128,7 @@ namespace ppm_fe.Services
             return new ApiResponse<Work>
             {
                 Success = false,
-                Message = ErrorMessage.UnexpectedError,
+                Message = Properties.UnexpectedError,
                 Data = null
             };
         }
@@ -167,14 +164,13 @@ namespace ppm_fe.Services
             }
             catch (Exception ex)
             {
-                LoggerHelper.LogError(this.GetType().Name, nameof(SavePdfToDatabaseAsync), $"An error occurred while uploading the PDF: {ex.Message}", new { fileName, pdfBytes, wordId }, ex.StackTrace);
+                LoggerHelper.LogError(this.GetType().Name, nameof(SavePdfToDatabaseAsync), $"An error occurred while uploading the PDF: {ex.Message}", new { FileName = fileName, PdfBytes = pdfBytes, WorkdId = wordId }, ex.StackTrace);
             }
         }
 
         public async Task<ApiResponse<Work>> UpdateWork(Work work)
         {
             string route = RouteHelper.GetFullUrl($"/works/{work.Id}");
-            //string route = RouteHelper.GetFullUrl($"/updatework/{work.Id}");
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Put,
@@ -191,21 +187,64 @@ namespace ppm_fe.Services
                 string jsonResponse = await response.Content.ReadAsStringAsync();
                 var responseResult = JsonConvert.DeserializeObject<ApiResponse<Work>>(jsonResponse);
 
-                if (responseResult != null && responseResult.Success)
+                if (responseResult != null)
                 {
                     return responseResult;
                 }
             }
             catch (Exception ex)
             {
-                // Log the error
-                LoggerHelper.LogError(GetType().Name, nameof(UpdateWork), ex.Message, new { work }, ex.StackTrace);
+                LoggerHelper.LogError(GetType().Name, nameof(UpdateWork), ex.Message, new { Work = work }, ex.StackTrace);
             }
 
             return new ApiResponse<Work>
             {
                 Success = false,
-                Message = ErrorMessage.UnexpectedError,
+                Message = Properties.UnexpectedError,
+                Data = null
+            };
+        }
+
+        public async Task<ApiResponse<Work>> CompleteWork(Work work, string fileName, byte[] pdfBytes)
+        {
+            string route = RouteHelper.GetFullUrl($"/works/{work.Id}/complete");
+            
+            try
+            {
+                Debug.WriteLine($"PDF bytes length: {pdfBytes.Length}");
+                var token = await SecureStorage.GetAsync("token");
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                using var content = new MultipartFormDataContent();
+
+                // Add the work data
+                var data = new StringContent(JsonConvert.SerializeObject(work), Encoding.UTF8, "application/json");
+                content.Add(data, "data");
+
+                // Add the PDF file
+                var pdfContent = new ByteArrayContent(pdfBytes);
+                content.Add(pdfContent, "pdf", fileName);
+
+                var response = await _client.PostAsync(route, content);
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                var responseResult = JsonConvert.DeserializeObject<ApiResponse<Work>>(jsonResponse);
+
+                if (responseResult != null)
+                {
+                    return responseResult;
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggerHelper.LogError(this.GetType().Name, nameof(CompleteWork), 
+                    $"An error occurred: {ex.Message}", 
+                    new { Work = work, FileName = fileName, PdfBytes = pdfBytes }, ex.StackTrace);
+            }
+
+            return new ApiResponse<Work>
+            {
+                Success = false,
+                Message = Properties.UnexpectedError,
                 Data = null
             };
         }
@@ -213,7 +252,6 @@ namespace ppm_fe.Services
         public async Task<ApiResponse<List<Work>>> GetAllUsersWorks(int page = 1, int perPage = 10)
         {
             string route = RouteHelper.GetFullUrl($"/works/allusers?page={page}&per_page={perPage}");
-            //string route = RouteHelper.GetFullUrl($"/works/allusersworks?page={page}&per_page={perPage}");
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
@@ -236,25 +274,25 @@ namespace ppm_fe.Services
                 }
                 else
                 {
-                    LoggerHelper.LogError(this.GetType().Name, nameof(GetAllUsersWorks), $"API request failed: {response.StatusCode}", new { UserId = App.UserDetails.Id }, null);
+                    LoggerHelper.LogError(this.GetType().Name, nameof(GetAllUsersWorks), $"API request failed: {response.StatusCode}", new { Page = page, PerPage = perPage }, null);
                 }
             }
             catch (Exception ex)
             {
-                LoggerHelper.LogError(this.GetType().Name, nameof(GetAllUsersWorks), $"An error occurred: {ex.Message}", new { UserId = App.UserDetails.Id }, ex.StackTrace);
+                LoggerHelper.LogError(this.GetType().Name, nameof(GetAllUsersWorks), $"An error occurred: {ex.Message}", new { Page = page, PerPage = perPage }, ex.StackTrace);
             }
 
             return new ApiResponse<List<Work>>
             {
                 Success = false,
-                Message = ErrorMessage.UnexpectedError,
+                Message = Properties.UnexpectedError,
                 Data = null
             };
         }
 
-        public async Task<ApiResponse<List<Work>>> FetchWorksPerTeam(string SelectedTeam, int page = 1, int perPage = 10)
+        public async Task<ApiResponse<List<Work>>> FetchWorksPerTeam(string selectedTeam, int page = 1, int perPage = 10)
         {
-            string route = RouteHelper.GetFullUrl($"/works/{SelectedTeam}?page={page}&per_page={perPage}");
+            string route = RouteHelper.GetFullUrl($"/works/{selectedTeam}?page={page}&per_page={perPage}");
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
@@ -277,23 +315,22 @@ namespace ppm_fe.Services
                 }
                 else
                 {
-                    LoggerHelper.LogError(this.GetType().Name, nameof(FetchWorksPerTeam), $"API request failed: {response.StatusCode}", new { UserId = App.UserDetails.Id, SelectedTeam }, null);
+                    LoggerHelper.LogError(this.GetType().Name, nameof(FetchWorksPerTeam), $"API request failed: {response.StatusCode}", new { SelectedTeam = selectedTeam, Page = page, PerPage = perPage }, null);
                 }
             }
             catch (Exception ex)
             {
-                LoggerHelper.LogError(this.GetType().Name, nameof(FetchWorksPerTeam), $"An error occurred: {ex.Message}", new { UserId = App.UserDetails.Id, SelectedTeam }, ex.StackTrace);
+                LoggerHelper.LogError(this.GetType().Name, nameof(FetchWorksPerTeam), $"An error occurred: {ex.Message}", new { SelectedTeam = selectedTeam, Page = page, PerPage = perPage }, ex.StackTrace);
             }
 
             return new ApiResponse<List<Work>>
             {
                 Success = false,
-                Message = ErrorMessage.UnexpectedError,
+                Message = Properties.UnexpectedError,
                 Data = null
             };
         }
 
-        // change to id
         public async Task<string> DownloadAndOpenPdfAsync(int workId, string url, string path)
         {
             string pdfName = Path.GetFileName(url);
@@ -302,7 +339,7 @@ namespace ppm_fe.Services
             string filePath = Path.Combine(path, pdfName);
             if (File.Exists(filePath))
             {
-                return filePath; // Return the existing file path
+                return filePath;
             }
 
             string route = RouteHelper.GetFullUrl($"/works/download/{workId}");
@@ -315,7 +352,6 @@ namespace ppm_fe.Services
 
             try
             {
-                
                 var token = await SecureStorage.GetAsync("token");
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -336,8 +372,8 @@ namespace ppm_fe.Services
             }
             catch (Exception ex)
             {
-                LoggerHelper.LogError(this.GetType().Name, nameof(DownloadAndOpenPdfAsync), $"An error occurred: {ex.Message}", new { UserId = App.UserDetails.Id, url }, ex.StackTrace);
-                throw; // Rethrow the exception to be handled by the caller
+                LoggerHelper.LogError(this.GetType().Name, nameof(DownloadAndOpenPdfAsync), $"An error occurred: {ex.Message}", new { WorkId = workId, Url = url, Path = path }, ex.StackTrace);
+                throw; // Rethrow the exception to be handled by the viewmodel
             }
         }
 
@@ -366,20 +402,21 @@ namespace ppm_fe.Services
                 }
                 else
                 {
-                    LoggerHelper.LogError(this.GetType().Name, nameof(GetAllWorks), $"API request failed: {response.StatusCode}", new { UserId = App.UserDetails.Id }, null);
+                    LoggerHelper.LogError(this.GetType().Name, nameof(GetAllWorks), $"API request failed: {response.StatusCode}", new { Page = page, PerPage = perPage }, null);
                 }
             }
             catch (Exception ex)
             {
-                LoggerHelper.LogError(this.GetType().Name, nameof(GetAllWorks), $"An error occurred: {ex.Message}", new { UserId = App.UserDetails.Id }, ex.StackTrace);
+                LoggerHelper.LogError(this.GetType().Name, nameof(GetAllWorks), $"An error occurred: {ex.Message}", new { Page = page, PerPage = perPage }, ex.StackTrace);
             }
 
             return new ApiResponse<List<Work>>
             {
                 Success = false,
-                Message = ErrorMessage.UnexpectedError,
+                Message = Properties.UnexpectedError,
                 Data = null
             };
         }
     }
 }
+    

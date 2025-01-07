@@ -3,14 +3,14 @@ using ppm_fe.Models;
 
 namespace ppm_fe.Services
 {
-
     public class LocalPathService : ILocalPathService
     {
-        private readonly string? _localDocumentsFolder;
-        private readonly string? _localBillsFolder;
-        private readonly string? _localWorksFolder;
-        private readonly string? _localWorksForAdminFolder;
-        private readonly string? _localWorksForOtherUsersFolder;
+        // Folders for storing pdf files in the user's device based on their role locally folders independently of the platform
+        private readonly string _localDocumentsFolder;
+        private readonly string _localBillsFolder;
+        private readonly string _localWorksFolder;
+        private readonly string _localWorksForAdminFolder;
+        private readonly string _localWorksForOtherUsersFolder;
 
         public LocalPathService()
         {
@@ -27,8 +27,9 @@ namespace ppm_fe.Services
             {
                 var documentsDirectory = externalStorageDir.AbsolutePath;
                 var mainFolder = Path.Combine(documentsDirectory, "PPM");
+               
 
-                if(App.UserDetails.Role_ID == 2)
+                if (App.UserDetails != null && App.UserDetails.Role_ID == 2)
                 {
                     _localWorksFolder = Path.Combine(mainFolder, "Einsätze");
                     Directory.CreateDirectory(_localWorksFolder);
@@ -37,7 +38,8 @@ namespace ppm_fe.Services
                 _localBillsFolder = Path.Combine(mainFolder, "Rechnungen");
                 Directory.CreateDirectory(_localBillsFolder);
 
-                _localDocumentsFolder = Path.Combine(documentsDirectory, "PPM");
+                _localDocumentsFolder = mainFolder;
+
             }
             else
             {
@@ -84,7 +86,7 @@ namespace ppm_fe.Services
             }
 
             // create subfolders for user Admin
-            if (App.UserDetails.Role_ID == (int)UserRole.Admin)
+            if (App.UserDetails != null && App.UserDetails.Role_ID == (int)UserRole.Admin)
             {
                 // Create subfolders for Bills
                 _localBillsFolder = Path.Combine(_localDocumentsFolder, "Rechnungen");
@@ -158,7 +160,7 @@ namespace ppm_fe.Services
         {
             get
             {
-                if (string.IsNullOrEmpty(_localWorksFolder) && App.UserDetails.Role_ID == 2)
+                if (string.IsNullOrEmpty(_localWorksFolder) && App.UserDetails != null && App.UserDetails.Role_ID == 2)
                 {
                     throw new InvalidOperationException("Local works folder is not initialized.");
                 }
@@ -170,7 +172,7 @@ namespace ppm_fe.Services
         {
             get
             {
-                if (string.IsNullOrEmpty(_localWorksForAdminFolder) && App.UserDetails.Role_ID == 2)
+                if (string.IsNullOrEmpty(_localWorksForAdminFolder) && App.UserDetails != null && App.UserDetails.Role_ID == 2)
                 {
                     throw new InvalidOperationException("Local admin works folder is not initialized.");
                 }
@@ -182,7 +184,7 @@ namespace ppm_fe.Services
         {
             get
             {
-                if (string.IsNullOrEmpty(_localWorksForOtherUsersFolder) && App.UserDetails.Role_ID == 2)
+                if (string.IsNullOrEmpty(_localWorksForOtherUsersFolder) && App.UserDetails != null && App.UserDetails.Role_ID == 2)
                 {
                     throw new InvalidOperationException("Local admin works for other users folder is not initialized.");
                 }

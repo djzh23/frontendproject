@@ -27,10 +27,13 @@
                         ItemsSource="{Binding ItemsSource, Source={x:Reference this}}"
                         SelectedItem="{Binding SelectedItem, Mode=TwoWay, Source={x:Reference this}}" 
                         FontSize="{Binding FontSize, Source={x:Reference this}}"
-                        BackgroundColor="{DynamicResource Tertiary}"
-                        TextColor="{DynamicResource PrimaryDarkText}"
+                        BackgroundColor="{DynamicResource Gray100}"
+                      
+                        
+                        TextColor="{DynamicResource PrimaryDark}"
                         VerticalOptions="Center" />
             </Grid>
+            <!--BackgroundColor="{DynamicResource Tertiary}"-->
         </Border.Content>
     </Border>
 </ContentView>
