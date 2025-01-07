@@ -79,8 +79,6 @@
                         </HorizontalStackLayout>
                     </Border>
 
-                    <Label HorizontalOptions="Center" Text="{Binding SelectedTheme, StringFormat='Ausgewähltes Theme : \{0\}'}"/>
-
                     <Button
                         x:Name="PrimaryBtn"
                         Text="Primäres Button-Design" 
