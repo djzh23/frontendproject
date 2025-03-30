@@ -93,8 +93,8 @@ ppm-fe/
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 👤 Author
+Zouhair Ijaad 
 
-[Your Name]
 - GitHub: [https://github.com/djzh23)]
 - LinkedIn: https://www.linkedin.com/in/zouhair-ijaad/
 
